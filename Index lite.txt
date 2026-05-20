@@ -1,0 +1,548 @@
+<!DOCTYPE html>
+<html lang="ar">
+<head>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Defect Tracker | تسجيل الدخول</title>
+<link rel="manifest" href="manifest.json">
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+<link rel="icon" href="favicon.ico" sizes="any">
+<link rel="icon" href="Defect-tracker-logo.png" type="image/png">
+<style>	
+:root {
+  --primary: #1976d2;
+  --primary-light: #4791db;
+  --primary-dark: #0d47a1;
+  --secondary: #ff9800;
+  --error: #d32f2f;
+  --card-bg: #ffffff;
+  --text-primary: #2c3e50;
+  --text-secondary: #546e7a;
+  --text-CopyR: #B5C4CB;
+  --border-color: #e0e0e0;
+  --input-bg: #f8f9fa;
+  --shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  --shadow-hover: 0 15px 40px rgba(0, 0, 0, 0.15);
+  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  font-family: 'Cairo', 'Segoe UI', sans-serif;
+  min-height: 100vh;
+  direction: rtl;
+  color: var(--text-primary);
+  background: linear-gradient(rgba(255, 255, 255, 0.9), rgba(255, 255, 255, 0.95));
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('banner-en.png') center/cover no-repeat;
+  z-index: -1;
+}
+
+.new-header {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  background: linear-gradient(135deg, var(--primary-dark), var(--primary));
+  color: white;
+  padding: 3px 30px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  border-bottom: 3px solid var(--secondary);
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.header-logo {
+  width: 45px;
+  height: 45px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+}
+
+.app-name { font-weight: 700; font-size: 1.3rem; }
+.company-name { font-size: 0.85rem; opacity: 0.9; margin-top: 2px; }
+
+.content {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  padding: 20px;
+}
+
+.container {
+  background: var(--card-bg);
+  padding: clamp(10px, 3vh, 25px) clamp(10px, 4vw, 20px);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+  width: 100%;
+  max-width: 440px;
+  text-align: center;
+  border: 1px solid var(--border-color);
+  backdrop-filter: blur(10px);
+  transition: transform 0.3s var(--transition), box-shadow 0.3s var(--transition);
+  margin: clamp(5px, 4vh, 15px) auto;
+}
+
+.container:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-hover);
+}
+
+.logo-container { margin-bottom: 0px; }
+.logo {
+  width: 120px; height: 120px;
+  border-radius: 50%;
+  box-shadow: 0 6px 20px rgba(25, 118, 210, 0.2);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  object-fit: cover;
+  border: 3px solid var(--primary-light);
+  padding: 5px; background: white;
+}
+.logo:hover { transform: scale(1.05) rotate(5deg); }
+
+h2 {
+  margin-bottom: clamp(8px, 2vh, 12px);
+  color: var(--primary-dark);
+  font-weight: 700;
+  font-size: 1.8rem;
+  position: relative;
+  display: inline-block;
+}
+h2::after {
+  content: '';
+  position: absolute;
+  bottom: -8px;
+  right: 0;
+  width: 60px; height: 3px;
+  background: linear-gradient(to right, var(--secondary), var(--primary));
+  border-radius: 3px;
+}
+
+p.subtitle {
+  color: var(--text-secondary);
+  font-size: 1rem;
+  margin: clamp(5px, 1.5vh, 10px) 0;
+  line-height: 1.5;
+}
+
+.form-group { margin-bottom: clamp(5px, 1.5vh, 12px); }
+label {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  font-weight: 600;
+  font-size: 0.95rem;
+  gap: 5px;
+}
+label i {
+  margin: 0;
+}
+
+.input-group { position: relative; }
+.input-group .icon {
+  position: absolute;
+  left: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: var(--primary);
+}
+
+input {
+  width: 100%;
+  padding: 14px 20px 14px 50px;
+  border: 2px solid var(--border-color);
+  border-radius: 12px;
+  background: var(--input-bg);
+  font-size: 16px;
+  text-align: right;
+  transition: all 0.3s ease;
+}
+input:focus {
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(25, 118, 210, 0.15);
+  background: white;
+  outline: none;
+}
+
+.input-hint { font-size: 0.8rem; color: #777; margin-top: 6px; padding-right: 8px; }
+
+button {
+  width: 50%;
+  padding: 10px;
+  font-size: 18px;
+  font-weight: 700;
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+  color: white;
+  border: none;
+  border-radius: 12px;
+  cursor: pointer;
+  position: relative;
+  margin: 15px 0 0;
+  box-shadow: 0 5px 15px rgba(25, 118, 210, 0.3);
+  transition: all 0.3s ease;
+}
+
+button:hover:not(:disabled) {
+  background: linear-gradient(135deg, #1565c0, #0d47a1);
+  transform: translateY(-3px);
+}
+button:disabled { background: #b0bec5; cursor: not-allowed; }
+
+button.loading .spinner { display: block; }
+button.loading span { visibility: hidden; }
+.spinner {
+  display: none;
+  position: absolute;
+  top: 30%;
+  left: 45%;
+  transform: translate(-50%, -50%);
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top: 3px solid white;
+  border-radius: 50%;
+  width: 24px; height: 24px;
+  animation: spin 0.8s linear infinite;
+}
+
+.page-loader {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(255, 255, 255, 0.95);
+  display: flex; flex-direction: column;
+  justify-content: center; align-items: center;
+  font-size: 1.1rem; color: var(--primary-dark);
+  border-radius: 20px;
+  gap: 15px;
+}
+
+p#error {
+  margin-top: 5px;
+  font-weight: 600;
+  color: var(--error);
+  font-size: 0.92rem;
+  text-align: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  padding: 10px;
+  border-radius: 8px;
+  background: rgba(211, 47, 47, 0.1);
+}
+p#error.visible { opacity: 1; }
+
+.footer {
+   margin-top: clamp(5px, 2vh, 10px);
+  color: var(--text-CopyR);
+  font-size: 0.65rem;
+}
+
+@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+
+/* زر الاتصال العائم */
+.floating-call { display: none; }
+@media (max-width: 768px) {
+  .floating-call {
+    display: block;
+    position: fixed;
+    bottom: 22px; left: 22px;
+    z-index: 9999;
+  }
+  .floating-call .call-btn {
+    background: linear-gradient(145deg, #28a745, #23923d);
+    color: #fff;
+    width: 60px; height: 60px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    text-decoration: none;
+    box-shadow: 0 8px 18px rgba(0, 0, 0, 0.25);
+    animation: pulse 1.8s infinite;
+    transition: all 0.3s ease-in-out;
+  }
+}
+@keyframes pulse {
+  0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5); }
+  70% { transform: scale(1.05); box-shadow: 0 0 0 18px rgba(40, 167, 69, 0); }
+  100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(40, 167, 69, 0); }
+}
+
+/* تحسينات للأداء على iOS */
+@media (max-device-width: 1024px) and (-webkit-min-device-pixel-ratio: 2) {
+  body::before {
+    position: absolute;
+  }
+  
+  .container {
+    backdrop-filter: none;
+    background: rgba(255, 255, 255, 0.98);
+  }
+  
+  /* تقليل تأثيرات الحركة على iOS */
+  .logo:hover, button:hover:not(:disabled), .container:hover {
+    transform: none;
+  }
+  
+  /* تحسين أداء الصور */
+  img {
+    -webkit-transform: translateZ(0);
+    transform: translateZ(0);
+  }
+}
+
+/* تنسيق SweetAlert2 مخصص */
+.swal2-popup {
+  font-family: 'Cairo', 'Segoe UI', sans-serif !important;
+  border-radius: 16px !important;
+  padding: 1.5rem !important;
+}
+
+.swal2-title {
+  font-size: 1.4rem !important;
+  font-weight: 700 !important;
+  color: var(--primary-dark) !important;
+}
+
+.swal2-html-container {
+  font-size: 1rem !important;
+  color: var(--text-primary) !important;
+}
+
+.swal2-confirm {
+  background: linear-gradient(135deg, var(--primary), var(--primary-dark)) !important;
+  border: none !important;
+  border-radius: 8px !important;
+  padding: 10px 24px !important;
+  font-family: 'Cairo', 'Segoe UI', sans-serif !important;
+  font-weight: 600 !important;
+  font-size: 16px !important;
+  min-width: 90px !important; /* عرض كافي للنص */
+}
+
+.swal2-success .swal2-title {
+  color: #28a745 !important;
+}
+
+.swal2-error .swal2-title {
+  color: var(--error) !important;
+}
+
+.swal2-warning .swal2-title {
+  color: #ff9800 !important;
+}
+
+/* تحسينات للعرض على الجوال */
+@media (max-width: 480px) {
+  .swal2-popup {
+    width: 85% !important;
+    margin: 0 10px !important;
+    padding: 1.2rem !important;
+  }
+  
+  .swal2-title {
+    font-size: 1.2rem !important;
+  }
+  
+  .swal2-html-container {
+    font-size: 0.95rem !important;
+  }
+  
+  .swal2-confirm {
+    padding: 8px 20px !important;
+    font-size: 15px !important;
+  }
+}
+</style>
+</head>
+<body>
+
+<header class="new-header">
+  <div class="brand-text">
+    <div class="app-name">SFC Defect Tracker App</div>
+    <div class="company-name">الشركة المصرية المتحدة للسكر</div>
+  </div>
+  <img src="USCELOGO.png" alt="شعار Defect Tracker" class="header-logo">
+</header>
+
+<div class="content">
+  <div class="container">
+    <div class="page-loader" id="pageLoader">
+      جاري تحميل التطبيق...
+      <div></div>
+    </div>
+    <div class="logo-container">
+      <img src="Defect-tracker-logo.png" alt="شعار التطبيق" class="logo" />
+    </div>
+    <h2>مرحباً بك</h2>
+    <p class="subtitle">Defect Tracker: Your Gateway to Continuous Improvement!</p>
+
+    <div class="form-group">
+      <label for="id"><i class="fas fa-id-card" style="margin-left: 5px;"></i> الرقم الوظيفي</label>
+      <div class="input-group">
+        <i class="fas fa-user icon"></i>
+        <input type="text" id="id" placeholder="أدخل الرقم الوظيفي" inputmode="numeric" pattern="[0-9]*" oninput="validateInput(this)" onkeypress="handleEnterKey(event)" />
+      </div>
+    </div>
+
+    <div class="form-group">
+      <label for="password"><i class="fas fa-key" style="margin-left: 5px;"></i> كلمة المرور</label>
+      <div class="input-group">
+        <i class="fas fa-lock icon"></i>
+        <input type="password" id="password" placeholder="أدخل كلمة المرور" onkeypress="handleEnterKey(event)" />
+      </div>
+    </div>
+
+    <button id="loginButton" onclick="submitForm()" disabled>
+      <span>تسجيل الدخول</span>
+      <div class="spinner"></div>
+    </button>
+
+    <div class="footer">
+      © 2022-2025 Defect Tracker - جميع الحقوق محفوظة
+      <div>Mahmoud Abou taleb || 201028262611</div>
+    </div>
+  </div>
+</div>
+
+<div class="floating-call">
+  <a href="tel:+201028262611" class="call-btn">
+    <i class="fas fa-phone-alt"></i>
+  </a>
+</div>
+
+<script>
+const GAS_ENDPOINT = 'https://script.google.com/macros/s/AKfycby-0ghUPbHRD9tWU5QbixK2kmrjBavPiOdV3fVnqNn6Bin3p7Z1INGSgaf1R14HyzFu/exec';
+
+function enableUI() {
+  document.getElementById('pageLoader').style.display = 'none';
+  validateForm();
+}
+window.addEventListener('load', enableUI);
+
+function validateInput(input) {
+  if (input.id === 'id') input.value = input.value.replace(/[^0-9]/g, '');
+  validateForm();
+}
+
+function validateForm() {
+  const id = document.getElementById('id').value.trim();
+  const pw = document.getElementById('password').value.trim();
+  document.getElementById('loginButton').disabled = !(id && pw);
+}
+
+function handleEnterKey(e) {
+  if (e.key === 'Enter') { e.preventDefault(); submitForm(); }
+}
+
+function submitForm() {
+  const id = document.getElementById('id').value.trim();
+  const pw = document.getElementById('password').value.trim();
+  const btn = document.getElementById('loginButton');
+
+  if (!id || !pw) {
+    Swal.fire({
+      icon: 'warning',
+      title: 'تنبيه',
+      text: 'الرجاء إدخال جميع الحقول',
+      confirmButtonText: 'حسناً',
+      customClass: {
+        confirmButton: 'custom-swal-confirm'
+      }
+    });
+    return;
+  }
+
+  btn.disabled = true;
+  btn.classList.add('loading');
+
+  fetch(GAS_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/x-www-form-urlencoded;charset=UTF-8' },
+    body: `id=${encodeURIComponent(id)}&password=${encodeURIComponent(pw)}`
+  })
+  .then(res => {
+    if (!res.ok) throw new Error('Network error');
+    return res.json();
+  })
+  .then(data => {
+    if (!data.ok) {
+      const errorMap = {
+        not_found: "المستخدم غير موجود",
+        wrong_password: "كلمة المرور غير صحيحة",
+        missing_fields: "الرجاء إدخال جميع الحقول",
+        server_error: "حدث خطأ في الخادم"
+      };
+      Swal.fire({
+        icon: 'error',
+        title: 'خطأ في تسجيل الدخول',
+        text: errorMap[data.error] || "فشل تسجيل الدخول",
+        confirmButtonText: 'حسناً',
+        customClass: {
+          confirmButton: 'custom-swal-confirm'
+        }
+      });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: 'مرحبا بك مرة آخري',
+        text: 'جاري تسجيل الدخولٍ',
+        showConfirmButton: false,
+        timer: 1000,
+        timerProgressBar: true
+      }).then(() => {
+        localStorage.setItem("userData", JSON.stringify(data));
+        window.location.href = "main.html";
+      });
+    }
+  })
+  .catch(() => {
+    Swal.fire({
+      icon: 'error',
+      title: 'مشكلة في الاتصال',
+      text: 'تعذر الاتصال بالخادم. تحقق من الإنترنت.',
+      confirmButtonText: 'حسناً',
+      customClass: {
+        confirmButton: 'custom-swal-confirm'
+      }
+    });
+  })
+  .finally(() => {
+    btn.classList.remove('loading');
+    btn.disabled = false;
+  });
+}
+
+document.getElementById('password').addEventListener('input', validateForm);
+
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('service-worker.js')
+    .then(() => console.log('Service Worker Registered'));
+}
+</script>
+
+</body>
+</html>

@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>تسجيل مخالفة</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <style>
+    @font-face { font-family: 'Avenir'; src: local('Avenir Medium'), local('AvenirMedium'), local('Avenir-Medium'); font-weight: 500; }
+    :root {
+      --green: #A7CE39; --green-dark: #7fa022; --slate: #5D676F; --slate-dark: #3d454b;
+      --orange: #EF9600; --white: #ffffff; --bg: #f4f6f3; --text: #2c3333;
+      --text-muted: #5D676F; --radius-sm: 10px; --radius-md: 16px; --header-h: 64px;
+      --font: 'Avenir', 'Cairo', 'Segoe UI', sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font); min-height: 100vh; direction: rtl; color: var(--text);
+      background: linear-gradient(rgba(244,246,243,0.88), rgba(244,246,243,0.92)), url('banner-en.png');
+      background-size: cover; background-position: center; background-repeat: no-repeat;
+      background-attachment: fixed; display: flex; flex-direction: column;
+      padding-top: calc(var(--header-h) + 20px); padding-bottom: 30px; padding-right: 14px; padding-left: 14px;
+    }
+    .main-header {
+      position: fixed; top: 0; right: 0; left: 0; z-index: 1000; height: var(--header-h);
+      background: var(--slate-dark); border-bottom: 4px solid var(--green);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    }
+    .header-brand { display: flex; align-items: center; gap: 12px; }
+    .header-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
+    .header-titles { display: flex; flex-direction: column; }
+    .header-app-name { font-weight: 500; font-size: 1rem; color: var(--white); }
+    .header-company { font-size: 0.72rem; color: var(--green); }
+    .header-actions { display: flex; align-items: center; gap: 10px; }
+    .header-btn {
+      background: rgba(167,206,57,0.12); border: 1.5px solid rgba(167,206,57,0.35);
+      color: var(--white); border-radius: var(--radius-sm); padding: 7px 14px;
+      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: all 0.25s;
+      text-decoration: none;
+    }
+    .header-btn:hover { background: rgba(167,206,57,0.25); }
+    .logout-btn {
+      background: rgba(220,53,69,0.12); border: 1.5px solid rgba(220,53,69,0.35);
+      color: #ff6b7a; border-radius: var(--radius-sm); padding: 7px 14px;
+      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: all 0.25s;
+    }
+    .logout-btn:hover { background: rgba(220,53,69,0.25); color: #ff4757; }
+    .myreports-btn {
+      background: rgba(93,103,111,0.12); border: 1.5px solid rgba(93,103,111,0.3);
+      color: var(--white); border-radius: var(--radius-sm); padding: 7px 14px;
+      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
+      display: flex; align-items: center; gap: 6px; transition: all 0.25s; text-decoration: none;
+    }
+    .myreports-btn:hover { background: rgba(93,103,111,0.25); }
+
+    /* زرار الأدمن */
+    .admin-btn {
+      background: rgba(239,150,0,0.15);
+      border: 1.5px solid rgba(239,150,0,0.45);
+      color: var(--orange);
+      border-radius: var(--radius-sm);
+      padding: 7px 12px;
+      font-family: var(--font);
+      font-size: 0.82rem;
+      font-weight: 500;
+      cursor: pointer;
+      display: none; /* مخفي افتراضياً */
+      align-items: center;
+      gap: 6px;
+      transition: all 0.25s;
+      text-decoration: none;
+      position: relative;
+    }
+    .admin-btn:hover {
+      background: rgba(239,150,0,0.28);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(239,150,0,0.25);
+    }
+    .admin-btn .admin-badge {
+      width: 7px; height: 7px; background: var(--orange);
+      border-radius: 50%; position: absolute; top: 6px; left: 6px;
+      animation: pulse-dot 2s infinite;
+    }
+    @keyframes pulse-dot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(1.4); }
+    }
+
+    .page-content { width: 100%; max-width: 850px; margin: auto; }
+    .page-title { text-align: center; margin-bottom: 18px; }
+    .page-title h1 { font-size: 1.6rem; color: var(--slate-dark); display: inline-flex; align-items: center; gap: 10px; }
+    .page-title h1 i { color: var(--orange); }
+    .page-title p { margin-top: 8px; font-size: 0.9rem; color: var(--text-muted); }
+    .card { background: var(--white); border-radius: var(--radius-md); overflow: hidden; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .card-top-bar { height: 4px; background: linear-gradient(90deg, var(--green), var(--orange)); }
+    .form-section { padding: 22px 20px; }
+    .section-title {
+      font-size: 0.95rem; font-weight: 500; color: var(--slate-dark); margin-bottom: 18px;
+      padding-bottom: 10px; border-bottom: 2px solid #eaf5c0; display: flex; align-items: center; gap: 8px;
+    }
+    .form-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+    .form-group { display: flex; flex-direction: column; gap: 6px; }
+    .full-width { grid-column: 1 / -1; }
+    label { font-size: 0.85rem; font-weight: 500; color: var(--slate-dark); }
+    label.required::after { content: " *"; color: red; }
+    input, textarea {
+      width: 100%; padding: 11px 14px; border: 1.5px solid rgba(93,103,111,0.2);
+      border-radius: var(--radius-sm); background: var(--bg); font-family: var(--font); outline: none; transition: 0.25s;
+    }
+    input:focus, textarea:focus { border-color: var(--green); background: white; box-shadow: 0 0 0 3px rgba(167,206,57,0.15); }
+    textarea { min-height: 130px; resize: vertical; }
+    .upload-box {
+      border: 2px dashed rgba(93,103,111,0.25); border-radius: 14px; padding: 28px 20px;
+      background: #f4f6f3; cursor: pointer; text-align: center; transition: 0.25s;
+      display: flex; flex-direction: column; gap: 10px; align-items: center;
+    }
+    .upload-box:hover { border-color: var(--green); background: #faffee; }
+    .upload-box i { font-size: 2rem; color: var(--green-dark); }
+    .upload-box span { font-size: 0.9rem; color: var(--text-muted); }
+    .upload-status { font-size: 0.82rem; margin-top: 6px; }
+    .upload-status.ok  { color: var(--green-dark); }
+    .upload-status.err { color: red; }
+    #preview { width: 100%; margin-top: 14px; border-radius: 12px; max-height: 350px; object-fit: cover; display: none; }
+    .btn-group { display: flex; justify-content: center; padding: 0 20px 24px; }
+    .btn {
+      border: none; border-radius: var(--radius-sm); padding: 13px 26px; cursor: pointer;
+      font-family: var(--font); font-size: 0.92rem; font-weight: 500; transition: 0.3s;
+      display: inline-flex; align-items: center; gap: 8px;
+    }
+    .btn-submit { background: var(--green); color: var(--slate-dark); }
+    .btn-submit:hover { transform: translateY(-3px); }
+    .btn-submit:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .footer {
+      text-align: center; color: var(--text-muted); font-size: 0.72rem; width: 100%;
+      max-width: 850px; padding: 14px; border-top: 1px solid rgba(93,103,111,0.1); margin: 16px auto 0;
+    }
+    .loading-overlay {
+      position: fixed; inset: 0; background: rgba(0,0,0,0.65); z-index: 9999;
+      display: none; justify-content: center; align-items: center; flex-direction: column; gap: 12px;
+    }
+    .spinner { width: 46px; height: 46px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); border-top: 4px solid var(--green); animation: spin 1s linear infinite; }
+    .loading-text { color: white; font-size: 0.95rem; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .header-company { display: none; } }
+  </style>
+</head>
+<body>
+
+  <header class="main-header">
+    <div class="header-brand">
+      <img src="USCELOGO.png" alt="logo" class="header-logo">
+      <div class="header-titles">
+        <div class="header-app-name">Incident Spot</div>
+        <div class="header-company">الشركة المصرية المتحدة للسكر</div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <!-- زرار بلاغاتي — يظهر لجميع المستخدمين -->
+      <a href="me.html" class="myreports-btn" title="بلاغاتي">
+        <i class="fas fa-list-check"></i>
+        <span>بلاغاتي</span>
+      </a>
+
+      <!-- زرار لوحة الأدمن — يظهر فقط للمستخدمين المصرّح لهم -->
+      <a href="admin.html" class="admin-btn" id="adminBtn" title="لوحة الإدارة">
+        <span class="admin-badge"></span>
+        <i class="fas fa-shield-halved"></i>
+        <span>الإدارة</span>
+      </a>
+
+      <button class="logout-btn" id="logoutBtn" onclick="confirmLogout()">
+        <i class="fas fa-right-from-bracket"></i> تسجيل خروج
+      </button>
+    </div>
+  </header>
+
+  <div class="page-content">
+    <div class="page-title">
+      <h1><i class="fas fa-triangle-exclamation"></i> تسجيل مخالفة</h1>
+      <p>قم بتسجيل المخالفة وإرفاق صورة للمراجعة والمتابعة</p>
+    </div>
+
+    <div class="card">
+      <div class="card-top-bar"></div>
+      <form id="violationForm">
+        <div class="form-section">
+          <div class="section-title">
+            <i class="fas fa-file-circle-plus"></i> بيانات المخالفة
+          </div>
+          <div class="form-grid">
+            <div class="form-group">
+              <label class="required">التاريخ</label>
+              <input type="date" id="date" required>
+            </div>
+            <div class="form-group">
+              <label>اسم المُبلِّغ</label>
+              <input type="text" id="reporterName" readonly style="background:#eaf5c0; color:#3d454b; font-weight:500; cursor:default;">
+            </div>
+            <div class="form-group full-width">
+              <label class="required">اسم المقاول</label>
+              <input type="text" id="contractor" placeholder="أدخل اسم المقاول" required>
+            </div>
+            <div class="form-group full-width">
+              <label class="required">وصف المخالفة</label>
+              <textarea id="description" placeholder="اكتب وصف المخالفة هنا..." required></textarea>
+            </div>
+            <div class="form-group full-width">
+              <label class="required">إرفاق صورة</label>
+              <div class="upload-box" onclick="document.getElementById('image').click()">
+                <i class="fas fa-camera"></i>
+                <span>اضغط لاختيار صورة أو التقاط صورة بالكاميرا</span>
+                <input type="file" id="image" accept="image/*" capture="environment" hidden>
+              </div>
+              <div id="uploadStatus" class="upload-status"></div>
+              <img id="preview">
+            </div>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button type="submit" class="btn btn-submit" id="submitBtn">
+            <i class="fas fa-paper-plane"></i> إرسال المخالفة
+          </button>
+        </div>
+      </form>
+    </div>
+
+    <footer class="footer">
+      <p>© 2026 Incident Spot — جميع الحقوق محفوظة</p>
+      <div>Mahmoud Abou Taleb | 201028262611</div>
+    </footer>
+  </div>
+
+  <div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text" id="loadingText">جاري إرسال البيانات...</div>
+  </div>
+
+  <script>
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYOzPZE46uHqO59ZDNLI7D4N8XEFNdtfvc_lSP67NRTdNrAIIHDqMt_AOAgXNjGM9P/exec";
+    const IMGBB_KEY  = "d4d42e5ea72b7ead74254a4b7356963e";
+
+    // ✅ الأدمن المصرّح لهم بالضبط
+    // ✅ تسجيل الخروج
+    function confirmLogout() {
+      Swal.fire({
+        icon: 'question',
+        title: 'تسجيل الخروج',
+        text: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+        showCancelButton: true,
+        confirmButtonText: 'نعم، خروج',
+        cancelButtonText: 'إلغاء',
+        confirmButtonColor: '#dc3545',
+        cancelButtonColor: '#5D676F',
+        reverseButtons: true
+      }).then((result) => {
+        if (result.isConfirmed) {
+          localStorage.removeItem('userData');
+          sessionStorage.clear();
+          window.location.href = 'index.html';
+        }
+      });
+    }
+
+    const ADMIN_NAMES = [
+      "Mohamed Akram Nour Eldien Refaey",
+      "Mahmoud Abou Taleb Mahmoud"
+    ];
+
+    // ✅ جيب اسم المبلغ من localStorage بتاع صفحة Login
+    let reporterName = "";
+    try {
+      const userData = JSON.parse(localStorage.getItem('userData') || '{}');
+      reporterName   = userData.name || "غير معروف";
+    } catch(e) { reporterName = "غير معروف"; }
+
+    document.getElementById('reporterName').value = reporterName;
+
+    // ✅ لو الاسم في قائمة الأدمن → وريله الزرار
+    if (ADMIN_NAMES.includes(reporterName)) {
+      document.getElementById('adminBtn').style.display = 'flex';
+    }
+
+    let imageUrl = ""; // رابط الصورة بعد الرفع على ImgBB
+
+    document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+    // ✅ تصغير الصورة باستخدام canvas
+    function resizeImage(file, maxSize, quality) {
+      return new Promise((resolve) => {
+        const img = new Image();
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          img.onload = () => {
+            let w = img.width, h = img.height;
+            if (w > maxSize) { h = Math.round(h * maxSize / w); w = maxSize; }
+            if (h > maxSize) { w = Math.round(w * maxSize / h); h = maxSize; }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', quality).split(',')[1]);
+          };
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ✅ عند اختيار صورة: تصغيرها ورفعها على ImgBB فوراً
+    document.getElementById('image').addEventListener('change', async function (e) {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      // معاينة
+      const reader = new FileReader();
+      reader.onload = (ev) => {
+        document.getElementById('preview').src = ev.target.result;
+        document.getElementById('preview').style.display = 'block';
+      };
+      reader.readAsDataURL(file);
+
+      // حالة الرفع
+      const status = document.getElementById('uploadStatus');
+      const submitBtn = document.getElementById('submitBtn');
+      status.textContent = "⏳ جاري رفع الصورة...";
+      status.className = "upload-status";
+      submitBtn.disabled = true;
+      imageUrl = "";
+
+      try {
+        // تصغير الصورة أولاً
+        const base64 = await resizeImage(file, 800, 0.75);
+
+        // رفع على ImgBB من المتصفح مباشرة
+        const formData = new FormData();
+        formData.append('key', IMGBB_KEY);
+        formData.append('image', base64);
+
+        const res  = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
+        const data = await res.json();
+
+        if (data.success) {
+          imageUrl = data.data.url;
+          status.textContent = "✅ تم رفع الصورة بنجاح";
+          status.className = "upload-status ok";
+        } else {
+          throw new Error("فشل رفع الصورة على ImgBB");
+        }
+      } catch (err) {
+        status.textContent = "❌ فشل رفع الصورة، حاول مرة أخرى";
+        status.className = "upload-status err";
+        console.error(err);
+      } finally {
+        submitBtn.disabled = false;
+      }
+    });
+
+    // ✅ إرسال النموذج — بيبعت الـ URL بس مش الصورة
+    document.getElementById('violationForm').addEventListener('submit', async function (e) {
+      e.preventDefault();
+
+      if (!imageUrl) {
+        Swal.fire({ icon: 'warning', title: 'تنبيه', text: 'يرجى إرفاق صورة وانتظار رفعها أولاً', confirmButtonColor: '#A7CE39' });
+        return;
+      }
+
+      const loading = document.getElementById('loadingOverlay');
+      document.getElementById('loadingText').textContent = "جاري إرسال البيانات...";
+      loading.style.display = 'flex';
+
+      try {
+        const form = new FormData();
+        form.append('date',         document.getElementById('date').value);
+        form.append('reporter',     reporterName);
+        form.append('contractor',   document.getElementById('contractor').value);
+        form.append('description',  document.getElementById('description').value);
+        form.append('imageUrl',     imageUrl);
+
+        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: form });
+
+        loading.style.display = 'none';
+        Swal.fire({ icon: 'success', title: 'تم الإبلاغ بنجاح ✅', text: 'شكرا لملاحظاتك', confirmButtonColor: '#A7CE39' });
+
+        document.getElementById('violationForm').reset();
+        document.getElementById('preview').style.display = 'none';
+        document.getElementById('uploadStatus').textContent = '';
+        imageUrl = "";
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+      } catch (err) {
+        loading.style.display = 'none';
+        Swal.fire({ icon: 'error', title: 'خطأ', text: err.message, confirmButtonColor: '#A7CE39' });
+        console.error(err);
+      }
+    });
+  </script>
+</body>
+</html>
