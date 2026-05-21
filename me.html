@@ -27,28 +27,42 @@
       position: fixed; top: 0; right: 0; left: 0; z-index: 1000; height: var(--header-h);
       background: var(--slate-dark); border-bottom: 4px solid var(--green);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      padding: 0 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-    .header-brand { display: flex; align-items: center; gap: 12px; }
-    .header-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
-    .header-titles { display: flex; flex-direction: column; }
-    .header-app-name { font-weight: 500; font-size: 1rem; color: var(--white); }
-    .header-company { font-size: 0.72rem; color: var(--green); }
-    .header-actions { display: flex; align-items: center; gap: 10px; }
-    .header-btn {
-      background: rgba(167,206,57,0.12); border: 1.5px solid rgba(167,206,57,0.35);
-      color: var(--white); border-radius: var(--radius-sm); padding: 7px 14px;
-      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.25s; text-decoration: none;
+    .header-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .header-logo { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); flex-shrink: 0; }
+    .header-titles { display: flex; flex-direction: column; min-width: 0; }
+    .header-app-name { font-weight: 500; font-size: 0.95rem; color: var(--white); white-space: nowrap; }
+    .header-company { font-size: 0.68rem; color: var(--green); white-space: nowrap; }
+    .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+    .header-actions a,
+    .header-actions button {
+      border-radius: var(--radius-sm); padding: 7px 12px;
+      font-family: var(--font); font-size: 0.82rem; font-weight: 500;
+      cursor: pointer; display: flex; align-items: center; gap: 6px;
+      transition: all 0.25s; text-decoration: none; white-space: nowrap;
+      border: 1.5px solid transparent;
     }
+    .header-btn { background: rgba(167,206,57,0.12); border-color: rgba(167,206,57,0.35); color: var(--white); }
     .header-btn:hover { background: rgba(167,206,57,0.25); }
-    .logout-btn {
-      background: rgba(220,53,69,0.12); border: 1.5px solid rgba(220,53,69,0.35);
-      color: #ff6b7a; border-radius: var(--radius-sm); padding: 7px 14px;
-      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.25s;
-    }
+    .logout-btn { background: rgba(220,53,69,0.12); border-color: rgba(220,53,69,0.35); color: #ff6b7a; }
     .logout-btn:hover { background: rgba(220,53,69,0.25); color: #ff4757; }
+    @media (max-width: 540px) {
+      .header-actions a span,
+      .header-actions button span { display: none; }
+      .header-actions a,
+      .header-actions button { padding: 8px 10px; gap: 0; }
+      .header-actions { gap: 6px; }
+      .header-company { display: none; }
+    }
+    @media (max-width: 360px) {
+      .main-header { padding: 0 10px; }
+      .header-logo { width: 32px; height: 32px; }
+      .header-app-name { font-size: 0.82rem; }
+      .header-actions { gap: 4px; }
+      .header-actions a,
+      .header-actions button { padding: 7px 8px; }
+    }
     .page-content { width: 100%; max-width: 1100px; margin: auto; }
     .page-title { text-align: center; margin-bottom: 22px; }
     .page-title h1 { font-size: 1.6rem; color: var(--slate-dark); display: inline-flex; align-items: center; gap: 10px; }
@@ -155,8 +169,8 @@
     .source-badge { font-size: 0.7rem; padding: 2px 7px; border-radius: 10px; background: rgba(239,150,0,0.12); color: var(--orange); margin-right: 6px; }
     .footer { text-align: center; color: var(--text-muted); font-size: 0.72rem; width: 100%; max-width: 1100px; padding: 14px; border-top: 1px solid rgba(93,103,111,0.1); margin: 24px auto 0; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; } .violations-grid { grid-template-columns: 1fr; } .header-company { display: none; } }
     @media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; } .violations-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -171,10 +185,12 @@
     </div>
     <div class="header-actions">
       <a href="main.html" class="header-btn">
-        <i class="fas fa-arrow-right"></i> رجوع
+        <i class="fas fa-arrow-right"></i>
+        <span>رجوع</span>
       </a>
       <button class="logout-btn" onclick="confirmLogout()">
-        <i class="fas fa-right-from-bracket"></i> تسجيل خروج
+        <i class="fas fa-right-from-bracket"></i>
+        <span>خروج</span>
       </button>
     </div>
   </header>
@@ -205,7 +221,6 @@
         <i class="fas fa-magnifying-glass"></i>
         <input type="text" id="searchInput" placeholder="ابحث بالمقاول أو الوصف..." oninput="filterCards()">
       </div>
-      <!-- فلتر المبلغين مخفي في صفحة "بلاغاتي" -->
       <button class="refresh-btn" id="refreshBtn" onclick="loadData()">
         <i class="fas fa-rotate-right"></i> تحديث
       </button>
@@ -230,81 +245,47 @@
   </div>
 
   <script>
-    // ── CONFIG ──────────────────────────────────────────────────────────────
     const SHEET_ID   = "1eRWXzIFP0dqvjgAk9uG5fqd_3NEcdeYEIINldReda8Y";
     const SHEET_NAME = "Violations";
-    // Apps Script URL — يرجع البيانات الفعلية بعد تعديل doGet
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2POlyIrsqAdcOP25FDrPV1tvYlJb0q9IYmrMfLprMI6qai06jXXJQFONbhr9SGwJm/exec";
-    // gviz fallback — يشتغل لو الشيت Public
-    const GVIZ_URL   = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
+    const GVIZ_URL   = \`https://docs.google.com/spreadsheets/d/\${SHEET_ID}/gviz/tq?tqx=out:json&sheet=\${encodeURIComponent(SHEET_NAME)}\`;
 
-    // ── ADMIN GUARD ──────────────────────────────────────────────────────────
-    const ADMIN_NAMES = [
-      "Mohamed Akram Nour Eldien Refaey",
-      "Mahmoud Abou Taleb Mahmoud"
-    ];
     let currentUser = "";
     try {
       const ud = JSON.parse(localStorage.getItem('userData') || '{}');
       currentUser = ud.name || "";
     } catch(e) {}
 
-    // لو مفيش يوزر مسجل، ارجعه لصفحة الدخول
     if (!currentUser) { window.location.href = 'index.html'; }
 
-    // ── DATA ─────────────────────────────────────────────────────────────────
     let allViolations = [];
 
     async function loadData() {
       const btn = document.getElementById('refreshBtn');
       btn.classList.add('spinning');
       showLoading();
-
-      // محاولة 1: Apps Script doGet
       let violations = await tryLoadFromScript();
-
-      // محاولة 2: gviz API كـ fallback
-      if (!violations) {
-        violations = await tryLoadFromGviz();
-      }
-
+      if (!violations) violations = await tryLoadFromGviz();
       btn.classList.remove('spinning');
-
-      if (!violations) {
-        showError();
-        return;
-      }
-
-      // فلتر على المستخدم الحالي فقط
+      if (!violations) { showError(); return; }
       allViolations = violations.filter(v => v.reporter === currentUser).reverse();
       updateStats();
       renderCards(allViolations);
     }
 
-    // ── محاولة Apps Script ──────────────────────────────────────────────────
     async function tryLoadFromScript() {
       try {
         const res  = await fetch(SCRIPT_URL + "?t=" + Date.now());
         const data = await res.json();
         if (!data.success || !Array.isArray(data.rows)) return null;
-
-        // الصفوف جاية كـ objects بالـ header keys
         return data.rows.map(r => ({
-          id:          r[Object.keys(r)[0]] ?? "",
-          date:        r[Object.keys(r)[1]] ?? "",
-          reporter:    r[Object.keys(r)[2]] ?? "",
-          contractor:  r[Object.keys(r)[3]] ?? "",
-          description: r[Object.keys(r)[4]] ?? "",
-          imageUrl:    r[Object.keys(r)[5]] ?? "",
-          timestamp:   r[Object.keys(r)[6]] ?? ""
+          id: r[Object.keys(r)[0]]??"", date: r[Object.keys(r)[1]]??"", reporter: r[Object.keys(r)[2]]??"",
+          contractor: r[Object.keys(r)[3]]??"", description: r[Object.keys(r)[4]]??"",
+          imageUrl: r[Object.keys(r)[5]]??"", timestamp: r[Object.keys(r)[6]]??""
         }));
-      } catch(e) {
-        console.warn("Script load failed, trying gviz...", e);
-        return null;
-      }
+      } catch(e) { console.warn("Script load failed", e); return null; }
     }
 
-    // ── محاولة gviz ─────────────────────────────────────────────────────────
     async function tryLoadFromGviz() {
       try {
         const res  = await fetch(GVIZ_URL + "&t=" + Date.now());
@@ -314,46 +295,27 @@
         const json = JSON.parse(match[1]);
         const rows = json.table?.rows;
         if (!rows) return null;
-
         return rows.map(row => {
           const c = row.c || [];
-          return {
-            id:          c[0]?.v ?? "",
-            date:        c[1]?.v ?? "",
-            reporter:    c[2]?.v ?? "",
-            contractor:  c[3]?.v ?? "",
-            description: c[4]?.v ?? "",
-            imageUrl:    c[5]?.v ?? "",
-            timestamp:   c[6]?.v ?? ""
-          };
+          return { id: c[0]?.v??"", date: c[1]?.v??"", reporter: c[2]?.v??"", contractor: c[3]?.v??"", description: c[4]?.v??"", imageUrl: c[5]?.v??"", timestamp: c[6]?.v??"" };
         });
-      } catch(e) {
-        console.error("gviz load also failed:", e);
-        return null;
-      }
+      } catch(e) { console.error("gviz failed:", e); return null; }
     }
 
     function showLoading() {
-      document.getElementById('violationsContainer').innerHTML = `
-        <div class="loading-state">
-          <div class="big-spinner"></div>
-          <p>جاري تحميل البيانات...</p>
-        </div>`;
+      document.getElementById('violationsContainer').innerHTML = \`<div class="loading-state"><div class="big-spinner"></div><p>جاري تحميل البيانات...</p></div>\`;
     }
-
     function showError() {
-      document.getElementById('violationsContainer').innerHTML = `
+      document.getElementById('violationsContainer').innerHTML = \`
         <div class="empty-state">
           <i class="fas fa-circle-exclamation" style="color:#dc3545;opacity:0.6;"></i>
           <p style="margin-bottom:12px;">فشل تحميل البيانات.</p>
-          <p style="font-size:0.82rem;">تأكد من أن <b>doGet</b> في Apps Script يرجع البيانات، أو أن الشيت مضبوط على <b>Public</b>.</p>
           <button onclick="loadData()" style="margin-top:14px;background:var(--green);border:none;padding:9px 20px;border-radius:9px;font-family:var(--font);cursor:pointer;font-weight:500;">
             <i class="fas fa-rotate-right"></i> إعادة المحاولة
           </button>
-        </div>`;
+        </div>\`;
     }
 
-    // ── STATS ────────────────────────────────────────────────────────────────
     function updateStats() {
       const today = new Date().toISOString().split('T')[0];
       const todayCount = allViolations.filter(v => String(v.date).includes(today)).length;
@@ -363,141 +325,90 @@
       document.getElementById('statContractors').textContent = contractorSet.size;
     }
 
-    // ── REPORTER FILTER ──────────────────────────────────────────────────────
-    function populateReporterFilter() {
-      const sel = document.getElementById('reporterFilter');
-      const reporters = [...new Set(allViolations.map(v => v.reporter).filter(Boolean))].sort();
-      sel.innerHTML = '<option value="">كل المُبلِّغين</option>';
-      reporters.forEach(r => {
-        const opt = document.createElement('option');
-        opt.value = r; opt.textContent = r; sel.appendChild(opt);
-      });
-    }
-
-    // ── FILTER ───────────────────────────────────────────────────────────────
     function filterCards() {
-      const q        = document.getElementById('searchInput').value.toLowerCase();
-
-      const filtered = allViolations.filter(v => {
-        const matchSearch =
-          (v.contractor  || "").toLowerCase().includes(q) ||
-          (v.description || "").toLowerCase().includes(q) ||
-          (v.reporter    || "").toLowerCase().includes(q);
-        return matchSearch;
-      });
+      const q = document.getElementById('searchInput').value.toLowerCase();
+      const filtered = allViolations.filter(v =>
+        (v.contractor||"").toLowerCase().includes(q) || (v.description||"").toLowerCase().includes(q)
+      );
       renderCards(filtered);
     }
 
-    // ── RENDER ───────────────────────────────────────────────────────────────
     function renderCards(list) {
       const container = document.getElementById('violationsContainer');
-      if (!list.length) {
-        container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>لا توجد بلاغات مطابقة للبحث</p></div>`;
-        return;
-      }
+      if (!list.length) { container.innerHTML = \`<div class="empty-state"><i class="fas fa-inbox"></i><p>لا توجد بلاغات مطابقة للبحث</p></div>\`; return; }
       const grid = document.createElement('div');
       grid.className = 'violations-grid';
-
       list.forEach((v, idx) => {
         const card = document.createElement('div');
         card.className = 'v-card';
         card.style.animationDelay = (idx * 0.05) + 's';
-
-        const dateDisplay = formatDate(v.date);
-        const tsDisplay   = formatTimestamp(v.timestamp);
-        const imgSrc      = v.imageUrl ? String(v.imageUrl).trim() : "";
-
+        const imgSrc = v.imageUrl ? String(v.imageUrl).trim() : "";
         const imgBlock = imgSrc
-          ? `<div class="v-img-wrap" onclick="openLightbox('${escHtml(imgSrc)}')">
-               <img src="${escHtml(imgSrc)}" alt="صورة البلاغ" loading="lazy"
-                    onerror="this.parentElement.outerHTML='<div class=\\'v-no-img\\'><i class=\\'fas fa-image-slash\\'></i><span>تعذّر تحميل الصورة</span></div>'">
+          ? \`<div class="v-img-wrap" onclick="openLightbox('\${escHtml(imgSrc)}')">
+               <img src="\${escHtml(imgSrc)}" alt="صورة البلاغ" loading="lazy"
+                    onerror="this.parentElement.outerHTML='<div class=\\\\'v-no-img\\\\'><i class=\\\\'fas fa-image-slash\\\\'></i><span>تعذّر تحميل الصورة</span></div>'">
                <div class="v-img-overlay"><i class="fas fa-magnifying-glass-plus"></i></div>
-               <div class="v-id-badge"># ${escHtml(String(v.id))}</div>
-             </div>`
-          : `<div class="v-no-img"><i class="fas fa-image-slash"></i><span>لا توجد صورة</span></div>`;
-
-        card.innerHTML = `
+               <div class="v-id-badge"># \${escHtml(String(v.id))}</div>
+             </div>\`
+          : \`<div class="v-no-img"><i class="fas fa-image-slash"></i><span>لا توجد صورة</span></div>\`;
+        card.innerHTML = \`
           <div class="v-card-top"></div>
-          ${imgBlock}
+          \${imgBlock}
           <div class="v-body">
             <div class="v-meta-row">
-              <span class="v-badge date"><i class="fas fa-calendar"></i> ${dateDisplay}</span>
+              <span class="v-badge date"><i class="fas fa-calendar"></i> \${formatDate(v.date)}</span>
             </div>
-            <div class="v-contractor"><i class="fas fa-hard-hat"></i>${escHtml(String(v.contractor))}</div>
-            <div class="v-desc">${escHtml(String(v.description))}</div>
+            <div class="v-contractor"><i class="fas fa-hard-hat"></i>\${escHtml(String(v.contractor))}</div>
+            <div class="v-desc">\${escHtml(String(v.description))}</div>
             <div class="v-footer">
-              <span class="v-timestamp"><i class="fas fa-clock"></i> ${tsDisplay}</span>
-              ${imgSrc ? `<a href="${escHtml(imgSrc)}" target="_blank" class="v-open-btn"><i class="fas fa-arrow-up-right-from-square"></i> فتح الصورة</a>` : ''}
+              <span class="v-timestamp"><i class="fas fa-clock"></i> \${formatTimestamp(v.timestamp)}</span>
+              \${imgSrc ? \`<a href="\${escHtml(imgSrc)}" target="_blank" class="v-open-btn"><i class="fas fa-arrow-up-right-from-square"></i> فتح الصورة</a>\` : ''}
             </div>
-          </div>`;
-
+          </div>\`;
         grid.appendChild(card);
       });
-
       container.innerHTML = '';
       container.appendChild(grid);
     }
 
-    // ── HELPERS ──────────────────────────────────────────────────────────────
     function escHtml(str) {
       return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
     }
-
     function formatDate(raw) {
       if (!raw) return "—";
       const s = String(raw);
-      // gviz format: Date(2025,11,25)
       const m = s.match(/Date\((\d+),(\d+),(\d+)\)/);
-      if (m) {
-        return new Date(+m[1], +m[2], +m[3]).toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
-      }
-      // plain string like 2025-12-25
-      if (s.match(/^\d{4}-\d{2}-\d{2}/)) {
-        const d = new Date(s);
-        if (!isNaN(d)) return d.toLocaleDateString('ar-EG', { year:'numeric', month:'long', day:'numeric' });
-      }
+      if (m) return new Date(+m[1],+m[2],+m[3]).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+      if (s.match(/^\d{4}-\d{2}-\d{2}/)) { const d=new Date(s); if(!isNaN(d)) return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'}); }
       return s;
     }
-
     function formatTimestamp(raw) {
       if (!raw) return "—";
       const s = String(raw);
       const m = s.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
-      if (m) {
-        return new Date(+m[1],+m[2],+m[3],+m[4],+m[5],+m[6])
-          .toLocaleString('ar-EG', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
-      }
-      // Apps Script Date object comes as ISO string
+      if (m) return new Date(+m[1],+m[2],+m[3],+m[4],+m[5],+m[6]).toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       const d = new Date(s);
-      if (!isNaN(d)) return d.toLocaleString('ar-EG', { day:'numeric', month:'short', hour:'2-digit', minute:'2-digit' });
+      if (!isNaN(d)) return d.toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
       return s;
     }
 
-    // ── LIGHTBOX ─────────────────────────────────────────────────────────────
-    function openLightbox(url) {
-      document.getElementById('lightboxImg').src = url;
-      document.getElementById('lightbox').classList.add('open');
-    }
+    function openLightbox(url) { document.getElementById('lightboxImg').src=url; document.getElementById('lightbox').classList.add('open'); }
     function closeLightbox(e) {
-      if (!e || e.target === document.getElementById('lightbox') || e.currentTarget?.classList.contains('lightbox-close')) {
+      if (!e || e.target===document.getElementById('lightbox') || e.currentTarget?.classList.contains('lightbox-close')) {
         document.getElementById('lightbox').classList.remove('open');
-        document.getElementById('lightboxImg').src = '';
+        document.getElementById('lightboxImg').src='';
       }
     }
-    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox({}); });
+    document.addEventListener('keydown', e => { if(e.key==='Escape') closeLightbox({}); });
 
-    // ── LOGOUT ───────────────────────────────────────────────────────────────
     function confirmLogout() {
       Swal.fire({
-        icon: 'question', title: 'تسجيل الخروج', text: 'هل أنت متأكد أنك تريد تسجيل الخروج؟',
-        showCancelButton: true, confirmButtonText: 'نعم، خروج', cancelButtonText: 'إلغاء',
-        confirmButtonColor: '#dc3545', cancelButtonColor: '#5D676F', reverseButtons: true
-      }).then(r => {
-        if (r.isConfirmed) { localStorage.removeItem('userData'); sessionStorage.clear(); window.location.href = 'index.html'; }
-      });
+        icon:'question', title:'تسجيل الخروج', text:'هل أنت متأكد أنك تريد تسجيل الخروج؟',
+        showCancelButton:true, confirmButtonText:'نعم، خروج', cancelButtonText:'إلغاء',
+        confirmButtonColor:'#dc3545', cancelButtonColor:'#5D676F', reverseButtons:true
+      }).then(r => { if(r.isConfirmed){ localStorage.removeItem('userData'); sessionStorage.clear(); window.location.href='index.html'; } });
     }
 
-    // ── INIT ─────────────────────────────────────────────────────────────────
     document.getElementById('welcomeName').textContent = currentUser;
     loadData();
   </script>
