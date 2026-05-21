@@ -22,74 +22,83 @@
       background-attachment: fixed; display: flex; flex-direction: column;
       padding-top: calc(var(--header-h) + 20px); padding-bottom: 30px; padding-right: 14px; padding-left: 14px;
     }
+
+    /* ===== HEADER ===== */
     .main-header {
       position: fixed; top: 0; right: 0; left: 0; z-index: 1000; height: var(--header-h);
       background: var(--slate-dark); border-bottom: 4px solid var(--green);
       display: flex; align-items: center; justify-content: space-between;
-      padding: 0 22px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      padding: 0 16px; box-shadow: 0 4px 20px rgba(0,0,0,0.2);
     }
-    .header-brand { display: flex; align-items: center; gap: 12px; }
-    .header-logo { width: 40px; height: 40px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); }
-    .header-titles { display: flex; flex-direction: column; }
-    .header-app-name { font-weight: 500; font-size: 1rem; color: var(--white); }
-    .header-company { font-size: 0.72rem; color: var(--green); }
-    .header-actions { display: flex; align-items: center; gap: 10px; }
-    .header-btn {
-      background: rgba(167,206,57,0.12); border: 1.5px solid rgba(167,206,57,0.35);
-      color: var(--white); border-radius: var(--radius-sm); padding: 7px 14px;
-      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.25s;
-      text-decoration: none;
-    }
-    .header-btn:hover { background: rgba(167,206,57,0.25); }
-    .logout-btn {
-      background: rgba(220,53,69,0.12); border: 1.5px solid rgba(220,53,69,0.35);
-      color: #ff6b7a; border-radius: var(--radius-sm); padding: 7px 14px;
-      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.25s;
-    }
-    .logout-btn:hover { background: rgba(220,53,69,0.25); color: #ff4757; }
-    .myreports-btn {
-      background: rgba(93,103,111,0.12); border: 1.5px solid rgba(93,103,111,0.3);
-      color: var(--white); border-radius: var(--radius-sm); padding: 7px 14px;
-      font-family: var(--font); font-size: 0.82rem; font-weight: 500; cursor: pointer;
-      display: flex; align-items: center; gap: 6px; transition: all 0.25s; text-decoration: none;
-    }
-    .myreports-btn:hover { background: rgba(93,103,111,0.25); }
+    .header-brand { display: flex; align-items: center; gap: 10px; min-width: 0; }
+    .header-logo { width: 38px; height: 38px; border-radius: 50%; object-fit: cover; border: 2px solid var(--green); flex-shrink: 0; }
+    .header-titles { display: flex; flex-direction: column; min-width: 0; }
+    .header-app-name { font-weight: 500; font-size: 0.95rem; color: var(--white); white-space: nowrap; }
+    .header-company { font-size: 0.68rem; color: var(--green); white-space: nowrap; }
 
-    /* زرار الأدمن */
-    .admin-btn {
-      background: rgba(239,150,0,0.15);
-      border: 1.5px solid rgba(239,150,0,0.45);
-      color: var(--orange);
+    .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
+
+    /* الأزرار — base مشتركة */
+    .header-actions a,
+    .header-actions button {
       border-radius: var(--radius-sm);
       padding: 7px 12px;
       font-family: var(--font);
       font-size: 0.82rem;
       font-weight: 500;
       cursor: pointer;
-      display: none; /* مخفي افتراضياً */
+      display: flex;
       align-items: center;
       gap: 6px;
       transition: all 0.25s;
       text-decoration: none;
-      position: relative;
+      white-space: nowrap;
+      border: 1.5px solid transparent;
     }
-    .admin-btn:hover {
-      background: rgba(239,150,0,0.28);
-      transform: translateY(-1px);
-      box-shadow: 0 4px 12px rgba(239,150,0,0.25);
+
+    .myreports-btn {
+      background: rgba(93,103,111,0.12); border-color: rgba(93,103,111,0.3); color: var(--white);
     }
-    .admin-btn .admin-badge {
-      width: 7px; height: 7px; background: var(--orange);
-      border-radius: 50%; position: absolute; top: 6px; left: 6px;
-      animation: pulse-dot 2s infinite;
+    .myreports-btn:hover { background: rgba(93,103,111,0.25); }
+
+    .admin-btn {
+      background: rgba(239,150,0,0.15); border-color: rgba(239,150,0,0.45); color: var(--orange);
+      display: none; position: relative;
+    }
+    .admin-btn:hover { background: rgba(239,150,0,0.28); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(239,150,0,0.25); }
+    .admin-badge {
+      width: 7px; height: 7px; background: var(--orange); border-radius: 50%;
+      position: absolute; top: 5px; left: 5px; animation: pulse-dot 2s infinite;
     }
     @keyframes pulse-dot {
       0%, 100% { opacity: 1; transform: scale(1); }
-      50% { opacity: 0.5; transform: scale(1.4); }
+      50%       { opacity: 0.5; transform: scale(1.4); }
     }
 
+    .logout-btn {
+      background: rgba(220,53,69,0.12); border-color: rgba(220,53,69,0.35); color: #ff6b7a;
+    }
+    .logout-btn:hover { background: rgba(220,53,69,0.25); color: #ff4757; }
+
+    /* ===== RESPONSIVE HEADER ===== */
+    @media (max-width: 540px) {
+      .header-actions a span,
+      .header-actions button span { display: none; }
+      .header-actions a,
+      .header-actions button { padding: 8px 10px; gap: 0; }
+      .header-actions { gap: 6px; }
+      .header-company { display: none; }
+    }
+    @media (max-width: 360px) {
+      .main-header { padding: 0 10px; }
+      .header-logo { width: 32px; height: 32px; }
+      .header-app-name { font-size: 0.82rem; }
+      .header-actions { gap: 4px; }
+      .header-actions a,
+      .header-actions button { padding: 7px 8px; }
+    }
+
+    /* ===== CONTENT ===== */
     .page-content { width: 100%; max-width: 850px; margin: auto; }
     .page-title { text-align: center; margin-bottom: 18px; }
     .page-title h1 { font-size: 1.6rem; color: var(--slate-dark); display: inline-flex; align-items: center; gap: 10px; }
@@ -145,7 +154,7 @@
     .spinner { width: 46px; height: 46px; border-radius: 50%; border: 4px solid rgba(255,255,255,0.2); border-top: 4px solid var(--green); animation: spin 1s linear infinite; }
     .loading-text { color: white; font-size: 0.95rem; }
     @keyframes spin { to { transform: rotate(360deg); } }
-    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } .header-company { display: none; } }
+    @media (max-width: 640px) { .form-grid { grid-template-columns: 1fr; } }
   </style>
 </head>
 <body>
@@ -160,21 +169,20 @@
     </div>
 
     <div class="header-actions">
-      <!-- زرار بلاغاتي — يظهر لجميع المستخدمين -->
       <a href="me.html" class="myreports-btn" title="بلاغاتي">
         <i class="fas fa-list-check"></i>
         <span>بلاغاتي</span>
       </a>
 
-      <!-- زرار لوحة الأدمن — يظهر فقط للمستخدمين المصرّح لهم -->
       <a href="admin.html" class="admin-btn" id="adminBtn" title="لوحة الإدارة">
         <span class="admin-badge"></span>
         <i class="fas fa-shield-halved"></i>
         <span>الإدارة</span>
       </a>
 
-      <button class="logout-btn" id="logoutBtn" onclick="confirmLogout()">
-        <i class="fas fa-right-from-bracket"></i> تسجيل خروج
+      <button class="logout-btn" onclick="confirmLogout()">
+        <i class="fas fa-right-from-bracket"></i>
+        <span>خروج</span>
       </button>
     </div>
   </header>
@@ -244,8 +252,11 @@
     const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYOzPZE46uHqO59ZDNLI7D4N8XEFNdtfvc_lSP67NRTdNrAIIHDqMt_AOAgXNjGM9P/exec";
     const IMGBB_KEY  = "d4d42e5ea72b7ead74254a4b7356963e";
 
-    // ✅ الأدمن المصرّح لهم بالضبط
-    // ✅ تسجيل الخروج
+    const ADMIN_NAMES = [
+      "Mohamed Akram Nour Eldien Refaey",
+      "Mahmoud Abou Taleb Mahmoud"
+    ];
+
     function confirmLogout() {
       Swal.fire({
         icon: 'question',
@@ -266,12 +277,7 @@
       });
     }
 
-    const ADMIN_NAMES = [
-      "Mohamed Akram Nour Eldien Refaey",
-      "Mahmoud Abou Taleb Mahmoud"
-    ];
-
-    // ✅ جيب اسم المبلغ من localStorage بتاع صفحة Login
+    // جيب اسم المبلغ من localStorage
     let reporterName = "";
     try {
       const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -280,16 +286,14 @@
 
     document.getElementById('reporterName').value = reporterName;
 
-    // ✅ لو الاسم في قائمة الأدمن → وريله الزرار
+    // وريله زرار الأدمن لو في القائمة
     if (ADMIN_NAMES.includes(reporterName)) {
       document.getElementById('adminBtn').style.display = 'flex';
     }
 
-    let imageUrl = ""; // رابط الصورة بعد الرفع على ImgBB
-
+    let imageUrl = "";
     document.getElementById('date').value = new Date().toISOString().split('T')[0];
 
-    // ✅ تصغير الصورة باستخدام canvas
     function resizeImage(file, maxSize, quality) {
       return new Promise((resolve) => {
         const img = new Image();
@@ -310,12 +314,10 @@
       });
     }
 
-    // ✅ عند اختيار صورة: تصغيرها ورفعها على ImgBB فوراً
     document.getElementById('image').addEventListener('change', async function (e) {
       const file = e.target.files[0];
       if (!file) return;
 
-      // معاينة
       const reader = new FileReader();
       reader.onload = (ev) => {
         document.getElementById('preview').src = ev.target.result;
@@ -323,43 +325,38 @@
       };
       reader.readAsDataURL(file);
 
-      // حالة الرفع
-      const status = document.getElementById('uploadStatus');
+      const status    = document.getElementById('uploadStatus');
       const submitBtn = document.getElementById('submitBtn');
       status.textContent = "⏳ جاري رفع الصورة...";
-      status.className = "upload-status";
+      status.className   = "upload-status";
       submitBtn.disabled = true;
       imageUrl = "";
 
       try {
-        // تصغير الصورة أولاً
-        const base64 = await resizeImage(file, 800, 0.75);
-
-        // رفع على ImgBB من المتصفح مباشرة
+        const base64   = await resizeImage(file, 800, 0.75);
         const formData = new FormData();
-        formData.append('key', IMGBB_KEY);
+        formData.append('key',   IMGBB_KEY);
         formData.append('image', base64);
 
         const res  = await fetch('https://api.imgbb.com/1/upload', { method: 'POST', body: formData });
         const data = await res.json();
 
         if (data.success) {
-          imageUrl = data.data.url;
-          status.textContent = "✅ تم رفع الصورة بنجاح";
-          status.className = "upload-status ok";
+          imageUrl               = data.data.url;
+          status.textContent     = "✅ تم رفع الصورة بنجاح";
+          status.className       = "upload-status ok";
         } else {
           throw new Error("فشل رفع الصورة على ImgBB");
         }
       } catch (err) {
         status.textContent = "❌ فشل رفع الصورة، حاول مرة أخرى";
-        status.className = "upload-status err";
+        status.className   = "upload-status err";
         console.error(err);
       } finally {
         submitBtn.disabled = false;
       }
     });
 
-    // ✅ إرسال النموذج — بيبعت الـ URL بس مش الصورة
     document.getElementById('violationForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 
@@ -369,27 +366,27 @@
       }
 
       const loading = document.getElementById('loadingOverlay');
-      document.getElementById('loadingText').textContent = "جاري إرسال البيانات...";
       loading.style.display = 'flex';
 
       try {
         const form = new FormData();
-        form.append('date',         document.getElementById('date').value);
-        form.append('reporter',     reporterName);
-        form.append('contractor',   document.getElementById('contractor').value);
-        form.append('description',  document.getElementById('description').value);
-        form.append('imageUrl',     imageUrl);
+        form.append('date',        document.getElementById('date').value);
+        form.append('reporter',    reporterName);
+        form.append('contractor',  document.getElementById('contractor').value);
+        form.append('description', document.getElementById('description').value);
+        form.append('imageUrl',    imageUrl);
 
         await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: form });
 
         loading.style.display = 'none';
-        Swal.fire({ icon: 'success', title: 'تم الإبلاغ بنجاح ✅', text: 'شكرا لملاحظاتك', confirmButtonColor: '#A7CE39' });
+        Swal.fire({ icon: 'success', title: 'تم الإبلاغ بنجاح ✅', text: 'شكراً لملاحظاتك', confirmButtonColor: '#A7CE39' });
 
         document.getElementById('violationForm').reset();
-        document.getElementById('preview').style.display = 'none';
+        document.getElementById('preview').style.display    = 'none';
         document.getElementById('uploadStatus').textContent = '';
         imageUrl = "";
         document.getElementById('date').value = new Date().toISOString().split('T')[0];
+        document.getElementById('reporterName').value = reporterName;
 
       } catch (err) {
         loading.style.display = 'none';
