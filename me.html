@@ -174,14 +174,11 @@
       </div>
     </div>
     <div class="header-actions">
-      <a href="main.html" class="header-btn">
-        <i class="fas fa-arrow-right"></i> رجوع
-      </a>
-      <button class="logout-btn" onclick="confirmLogout()">
-        <i class="fas fa-right-from-bracket"></i> تسجيل خروج
-      </button>
+      <a href="main.html" class="header-btn"><i class="fas fa-arrow-right"></i><span>رجوع</span></a>
+      <button class="logout-btn" onclick="confirmLogout()"><i class="fas fa-right-from-bracket"></i><span>خروج</span></button>
     </div>
   </header>
+
 
   <div class="page-content">
     <div class="page-title">
@@ -313,33 +310,43 @@
       return data;
     }
 
-    async function tryLoadFromScript() {
+        async function tryLoadFromScript() {
       try {
         const res  = await fetch(SCRIPT_URL + "?t=" + Date.now());
-        const data = await res.json();
-        if (!data.success || !Array.isArray(data.rows)) return null;
+        const text = await res.text();
+        console.log("Script raw:", text.substring(0, 300));
+        let data;
+        try { data = JSON.parse(text); } catch(pe) { console.error("JSON parse error:", pe); return null; }
+        if (!data.success) { console.warn("success=false:", data.message); return null; }
+        if (!Array.isArray(data.rows)) { console.warn("rows not array"); return null; }
+        if (data.rows.length === 0) return [];
+        const keys = Object.keys(data.rows[0]);
+        console.log("Keys:", keys);
         return data.rows.map(r => ({
-          id: r[Object.keys(r)[0]]??"", date: r[Object.keys(r)[1]]??"", reporter: r[Object.keys(r)[2]]??"",
-          contractor: r[Object.keys(r)[3]]??"", description: r[Object.keys(r)[4]]??"",
-          imageUrl: r[Object.keys(r)[5]]??"", timestamp: r[Object.keys(r)[6]]??""
+          id: r[keys[0]]??"", date: r[keys[1]]??"", reporter: r[keys[2]]??"",
+          contractor: r[keys[3]]??"", description: r[keys[4]]??"",
+          imageUrl: r[keys[5]]??"", timestamp: r[keys[6]]??""
         }));
-      } catch(e) { return null; }
+      } catch(e) { console.warn("Script load failed:", e); return null; }
     }
 
     async function tryLoadFromGviz() {
       try {
+        console.log("🔄 Trying gviz fallback...");
         const res  = await fetch(GVIZ_URL + "&t=" + Date.now());
         const text = await res.text();
+        console.log("📦 gviz raw:", text.substring(0, 200));
         const match = text.match(/google\.visualization\.Query\.setResponse\(([\s\S]*)\)/);
-        if (!match) return null;
+        if (!match) { console.error("❌ gviz: no match"); return null; }
         const json = JSON.parse(match[1]);
         const rows = json.table?.rows;
-        if (!rows) return null;
+        if (!rows) { console.error("❌ gviz: no rows"); return null; }
+        console.log("✅ gviz rows count:", rows.length);
         return rows.map(row => {
           const c = row.c||[];
           return { id:c[0]?.v??"", date:c[1]?.v??"", reporter:c[2]?.v??"", contractor:c[3]?.v??"", description:c[4]?.v??"", imageUrl:c[5]?.v??"", timestamp:c[6]?.v??"" };
         });
-      } catch(e) { return null; }
+      } catch(e) { console.error("❌ gviz failed:", e); return null; }
     }
 
     function showLoading() {
