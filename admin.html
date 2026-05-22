@@ -242,15 +242,16 @@
       document.getElementById('syncIndicator').classList.remove('active');
       if (!fresh) return;
 
-      // لو في بيانات جديدة — حدّث بصمت
-      const oldCount = allViolations.length;
+      // ✅ مقارنة المحتوى كامل مش بس العدد
+      const oldSnapshot = JSON.stringify(allViolations);
       allViolations = fresh.reverse();
       saveToCache(allViolations);
 
-      if (allViolations.length !== oldCount) {
+      const hasChanged = JSON.stringify(allViolations) !== oldSnapshot;
+      if (hasChanged) {
         updateStats();
         populateReporterFilter();
-        filterCards(); // احترم الفلتر الحالي
+        filterCards();
       }
     }
 
