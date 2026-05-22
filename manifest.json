@@ -1,11 +1,11 @@
 {
-  "name": "SFC Defect Tracker",
-  "short_name": "Defect Tracker",
+  "name": "Incident Spot",
+  "short_name": "Incident Spot",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#1976d2",
-  "description": "Defect Tracker App",
+  "description": "Incident Spot App",
   "icons": [
     {
       "src": "icons/icon-192.png",
