@@ -216,7 +216,8 @@
       if (!fresh) return;
       const filtered = fresh.filter(v=>v.reporter===currentUser).reverse();
       saveToCache(filtered);
-      if (filtered.length !== allViolations.length) { allViolations=filtered; updateStats(); filterCards(); }
+      const hasChanged = filtered.length !== allViolations.length || JSON.stringify(filtered) !== JSON.stringify(allViolations);
+      if (hasChanged) { allViolations=filtered; updateStats(); filterCards(); }
     }
 
     async function forceRefresh() {
