@@ -7,752 +7,143 @@
 
 <title>لوحة الإدارة — Incident Spot</title>
 
-<link rel="stylesheet"
-href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
 <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
 
 <style>
 
-@font-face{
-  font-family:'Avenir';
-  src:local('Avenir Medium'),
-      local('AvenirMedium'),
-      local('Avenir-Medium');
-  font-weight:500;
+@font-face {
+  font-family: 'Avenir';
+  src: local('Avenir Medium'), local('AvenirMedium'), local('Avenir-Medium');
+  font-weight: 500;
 }
 
-:root{
-  --green:#A7CE39;
-  --green-dark:#7fa022;
-  --slate:#5D676F;
-  --slate-dark:#3d454b;
-  --orange:#EF9600;
-  --white:#ffffff;
-  --bg:#f4f6f3;
-  --text:#2c3333;
-  --text-muted:#5D676F;
-  --radius-sm:10px;
-  --radius-md:16px;
-  --header-h:64px;
-  --font:'Avenir','Cairo','Segoe UI',sans-serif;
+:root {
+  --green: #A7CE39;
+  --green-dark: #7fa022;
+  --slate: #5D676F;
+  --slate-dark: #3d454b;
+  --orange: #EF9600;
+  --white: #ffffff;
+  --bg: #f4f6f3;
+  --text: #2c3333;
+  --text-muted: #5D676F;
+  --radius-sm: 10px;
+  --radius-md: 16px;
+  --header-h: 64px;
+  --font: 'Avenir', 'Cairo', 'Segoe UI', sans-serif;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: var(--font);
+  min-height: 100vh;
+  direction: rtl;
+  color: var(--text);
+  background: linear-gradient(rgba(244,246,243,0.88), rgba(244,246,243,0.92)), url('banner-en.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  display: flex;
+  flex-direction: column;
+  padding-top: calc(var(--header-h) + 24px);
+  padding-bottom: 40px;
+  padding-right: 14px;
+  padding-left: 14px;
 }
 
-body{
-  font-family:var(--font);
-  min-height:100vh;
-  direction:rtl;
-  color:var(--text);
-
-  background:
-  linear-gradient(
-    rgba(244,246,243,0.88),
-    rgba(244,246,243,0.92)
-  ),
-  url('banner-en.png');
-
-  background-size:cover;
-  background-position:center;
-  background-repeat:no-repeat;
-  background-attachment:fixed;
-
-  display:flex;
-  flex-direction:column;
-
-  padding-top:calc(var(--header-h) + 24px);
-  padding-bottom:40px;
-  padding-right:14px;
-  padding-left:14px;
+/* ===== HEADER ===== */
+.main-header {
+  position: fixed;
+  top: 0; right: 0; left: 0;
+  z-index: 1000;
+  height: var(--header-h);
+  background: var(--slate-dark);
+  border-bottom: 4px solid var(--green);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
-.main-header{
-  position:fixed;
-  top:0;
-  right:0;
-  left:0;
-  z-index:1000;
-
-  height:var(--header-h);
-
-  background:var(--slate-dark);
-
-  border-bottom:4px solid var(--green);
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  padding:0 16px;
-
-  box-shadow:0 4px 20px rgba(0,0,0,0.2);
+.header-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
 }
 
-.header-brand{
-  display:flex;
-  align-items:center;
-  gap:10px;
-  min-width:0;
+.header-logo {
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2px solid var(--green);
+  flex-shrink: 0;
 }
 
-.header-logo{
-  width:38px;
-  height:38px;
-  border-radius:50%;
-  object-fit:cover;
-  border:2px solid var(--green);
-  flex-shrink:0;
+.header-titles {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
 }
 
-.header-titles{
-  display:flex;
-  flex-direction:column;
-  min-width:0;
+.header-app-name {
+  font-weight: 500;
+  font-size: 0.95rem;
+  color: var(--white);
+  white-space: nowrap;
 }
 
-.header-app-name{
-  font-weight:500;
-  font-size:0.95rem;
-  color:var(--white);
-  white-space:nowrap;
+.header-company {
+  font-size: 0.68rem;
+  color: var(--green);
+  white-space: nowrap;
 }
 
-.header-company{
-  font-size:0.68rem;
-  color:var(--green);
-  white-space:nowrap;
-}
-
-.header-actions{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  flex-shrink:0;
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
 }
 
 .header-actions a,
-.header-actions button{
-
-  border-radius:var(--radius-sm);
-
-  padding:7px 12px;
-
-  font-family:var(--font);
-  font-size:0.82rem;
-  font-weight:500;
-
-  cursor:pointer;
-
-  display:flex;
-  align-items:center;
-  gap:6px;
-
-  transition:all 0.25s;
-
-  text-decoration:none;
-  white-space:nowrap;
-
-  border:1.5px solid transparent;
-}
-
-.header-btn{
-  background:rgba(167,206,57,0.12);
-  border-color:rgba(167,206,57,0.35);
-  color:var(--white);
-}
-
-.header-btn:hover{
-  background:rgba(167,206,57,0.25);
-}
-
-.logout-btn{
-  background:rgba(220,53,69,0.12);
-  border-color:rgba(220,53,69,0.35);
-  color:#ff6b7a;
-}
-
-.logout-btn:hover{
-  background:rgba(220,53,69,0.25);
-  color:#ff4757;
-}
-
-.page-content{
-  width:100%;
-  max-width:1100px;
-  margin:auto;
-}
-
-.page-title{
-  text-align:center;
-  margin-bottom:22px;
-}
-
-.page-title h1{
-  font-size:1.6rem;
-  color:var(--slate-dark);
-
-  display:inline-flex;
-  align-items:center;
-  gap:10px;
-}
-
-.page-title h1 i{
-  color:var(--orange);
-}
-
-.page-title p{
-  margin-top:8px;
-  font-size:0.9rem;
-  color:var(--text-muted);
-}
-
-.stats-row{
-  display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:14px;
-  margin-bottom:22px;
-}
-
-.stat-card{
-  background:var(--white);
-  border-radius:var(--radius-md);
-  box-shadow:0 2px 8px rgba(0,0,0,0.07);
-
-  padding:18px 20px;
-
-  display:flex;
-  align-items:center;
-  gap:14px;
-
-  border-top:4px solid transparent;
-}
-
-.stat-card.green{
-  border-top-color:var(--green);
-}
-
-.stat-card.orange{
-  border-top-color:var(--orange);
-}
-
-.stat-card.slate{
-  border-top-color:var(--slate);
-}
-
-.stat-icon{
-  width:46px;
-  height:46px;
-
-  border-radius:12px;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  font-size:1.2rem;
-  flex-shrink:0;
-}
-
-.stat-card.green .stat-icon{
-  background:rgba(167,206,57,0.15);
-  color:var(--green-dark);
-}
-
-.stat-card.orange .stat-icon{
-  background:rgba(239,150,0,0.15);
-  color:var(--orange);
-}
-
-.stat-card.slate .stat-icon{
-  background:rgba(93,103,111,0.12);
-  color:var(--slate);
-}
-
-.stat-label{
-  font-size:0.78rem;
-  color:var(--text-muted);
-  margin-bottom:4px;
-}
-
-.stat-value{
-  font-size:1.7rem;
-  font-weight:500;
-  color:var(--slate-dark);
-  line-height:1;
-}
-
-.toolbar{
-  background:var(--white);
-
-  border-radius:var(--radius-md);
-
-  box-shadow:0 2px 8px rgba(0,0,0,0.07);
-
-  padding:14px 18px;
-  margin-bottom:20px;
-
-  display:flex;
-  align-items:center;
-  gap:12px;
-  flex-wrap:wrap;
-}
-
-.search-box{
-  flex:1;
-  min-width:200px;
-  position:relative;
-}
-
-.search-box i{
-  position:absolute;
-  right:12px;
-  top:50%;
-  transform:translateY(-50%);
-  color:var(--text-muted);
-  font-size:0.85rem;
-}
-
-.search-box input{
-  width:100%;
-
-  padding:9px 36px 9px 14px;
-
-  border:1.5px solid rgba(93,103,111,0.2);
-  border-radius:var(--radius-sm);
-
-  background:var(--bg);
-
-  font-family:var(--font);
-  font-size:0.85rem;
-
-  outline:none;
-  transition:0.25s;
-}
-
-.search-box input:focus{
-  border-color:var(--green);
-  background:white;
-  box-shadow:0 0 0 3px rgba(167,206,57,0.15);
-}
-
-.filter-select{
-  padding:9px 14px;
-
-  border:1.5px solid rgba(93,103,111,0.2);
-  border-radius:var(--radius-sm);
-
-  background:var(--bg);
-
-  font-family:var(--font);
-  font-size:0.85rem;
-
-  color:var(--text);
-
-  outline:none;
-  cursor:pointer;
-}
-
-.refresh-btn{
-  background:rgba(167,206,57,0.12);
-  border:1.5px solid rgba(167,206,57,0.35);
-  color:var(--green-dark);
-
-  border-radius:var(--radius-sm);
-
-  padding:9px 16px;
-
-  font-family:var(--font);
-  font-size:0.85rem;
-  font-weight:500;
-
-  cursor:pointer;
-
-  display:flex;
-  align-items:center;
-  gap:6px;
-
-  transition:all 0.25s;
-}
-
-.refresh-btn:hover{
-  background:rgba(167,206,57,0.25);
-}
-
-.refresh-btn.spinning i{
-  animation:spin 0.8s linear infinite;
-}
-
-.sync-indicator{
-  display:none;
-  align-items:center;
-  gap:5px;
-  font-size:0.75rem;
-  color:var(--text-muted);
-}
-
-.sync-indicator.active{
-  display:flex;
-}
-
-.sync-dot{
-  width:6px;
-  height:6px;
-  background:var(--green);
-  border-radius:50%;
-  animation:pulse-dot 1.2s infinite;
-}
-
-@keyframes pulse-dot{
-  0%,100%{
-    opacity:1;
-    transform:scale(1);
-  }
-  50%{
-    opacity:0.4;
-    transform:scale(1.3);
-  }
-}
-
-.loading-state{
-  text-align:center;
-  padding:60px 20px;
-  color:var(--text-muted);
-}
-
-.big-spinner{
-  width:52px;
-  height:52px;
-
-  border-radius:50%;
-
-  border:4px solid rgba(167,206,57,0.2);
-  border-top:4px solid var(--green);
-
-  animation:spin 1s linear infinite;
-
-  margin:0 auto 16px;
-}
-
-.empty-state{
-  text-align:center;
-  padding:60px 20px;
-  color:var(--text-muted);
-
-  background:var(--white);
-
-  border-radius:var(--radius-md);
-
-  box-shadow:0 2px 8px rgba(0,0,0,0.07);
-}
-
-.violations-grid{
-  display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(320px,1fr));
-  gap:18px;
-}
-
-.v-card{
-  background:var(--white);
-
-  border-radius:var(--radius-md);
-
-  box-shadow:0 2px 8px rgba(0,0,0,0.08);
-
-  overflow:hidden;
-
-  transition:transform 0.25s,box-shadow 0.25s;
-}
-
-.v-card:hover{
-  transform:translateY(-4px);
-  box-shadow:0 8px 24px rgba(0,0,0,0.12);
-}
-
-.v-card-top{
-  height:4px;
-  background:linear-gradient(
-    90deg,
-    var(--green),
-    var(--orange)
-  );
-}
-
-.v-img-wrap{
-  position:relative;
-  overflow:hidden;
-  background:#eef0ec;
-  cursor:pointer;
-}
-
-.v-img-wrap img{
-  width:100%;
-  height:200px;
-  object-fit:cover;
-  display:block;
-}
-
-.v-img-overlay{
-  position:absolute;
-  inset:0;
-
-  background:rgba(61,69,75,0);
-
-  transition:0.3s;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-}
-
-.v-img-wrap:hover .v-img-overlay{
-  background:rgba(61,69,75,0.35);
-}
-
-.v-img-overlay i{
-  color:white;
-  font-size:1.6rem;
-  opacity:0;
-  transition:0.3s;
-}
-
-.v-img-wrap:hover .v-img-overlay i{
-  opacity:1;
-}
-
-.v-no-img{
-  height:200px;
-
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  justify-content:center;
-
-  gap:8px;
-
-  color:var(--text-muted);
-
-  background:#f0f2ef;
-}
-
-.v-id-badge{
-  position:absolute;
-  top:10px;
-  right:10px;
-
-  background:rgba(61,69,75,0.82);
-  color:white;
-
-  font-size:0.72rem;
-
-  padding:3px 9px;
-
-  border-radius:20px;
-}
-
-.v-body{
-  padding:16px 18px;
-}
-
-.v-meta-row{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  margin-bottom:10px;
-  flex-wrap:wrap;
-}
-
-.v-badge{
-  display:inline-flex;
-  align-items:center;
-  gap:5px;
-
-  font-size:0.75rem;
-
-  padding:3px 10px;
-
-  border-radius:20px;
-  font-weight:500;
-}
-
-.v-badge.date{
-  background:rgba(167,206,57,0.15);
-  color:var(--green-dark);
-}
-
-.v-badge.reporter{
-  background:rgba(93,103,111,0.12);
-  color:var(--slate-dark);
-}
-
-.v-contractor{
-  font-size:1rem;
-  font-weight:500;
-  color:var(--slate-dark);
-
-  margin-bottom:8px;
-
-  display:flex;
-  align-items:center;
-  gap:8px;
-}
-
-.v-desc{
-  font-size:0.85rem;
-  color:var(--text-muted);
-
-  line-height:1.65;
-
-  border-right:3px solid #eaf5c0;
-  padding-right:10px;
-
-  margin-bottom:14px;
-}
-
-.v-footer{
-  border-top:1px solid rgba(93,103,111,0.1);
-
-  padding-top:12px;
-
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-
-  gap:10px;
-  flex-wrap:wrap;
-}
-
-.v-timestamp{
-  font-size:0.73rem;
-  color:var(--text-muted);
-
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.v-open-btn{
-  background:none;
-
-  border:1.5px solid rgba(167,206,57,0.4);
-
-  color:var(--green-dark);
-
-  border-radius:8px;
-
-  padding:5px 12px;
-
-  text-decoration:none;
-
-  font-size:0.78rem;
-
-  display:flex;
-  align-items:center;
-  gap:5px;
-}
-
-.action-btn{
-  width:34px;
-  height:34px;
-
-  border:none;
-  border-radius:10px;
-
-  cursor:pointer;
-
-  display:flex;
-  align-items:center;
-  justify-content:center;
-
-  transition:0.25s;
-
-  font-size:0.85rem;
-}
-
-.action-btn.copy{
-  background:rgba(93,103,111,0.12);
-  color:var(--slate-dark);
-}
-
-.action-btn.edit{
-  background:rgba(239,150,0,0.15);
-  color:var(--orange);
-}
-
-.action-btn.delete{
-  background:rgba(220,53,69,0.12);
-  color:#dc3545;
-}
-
-.lightbox{
-  position:fixed;
-  inset:0;
-
-  background:rgba(0,0,0,0.88);
-
-  z-index:9000;
-
-  display:none;
-  align-items:center;
-  justify-content:center;
-
-  padding:20px;
-}
-
-.lightbox.open{
-  display:flex;
+.header-actions button {
+  border-radius: var(--radius-sm);
+  padding: 7px 12px;
+  font-family: var(--font);
+  font-size: 0.82rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s;
+  text-decoration: none;
+  white-space: nowrap;
+  border: 1.5px solid transparent;
 }
 
-.lightbox img{
-  max-width:90vw;
-  max-height:88vh;
-  border-radius:12px;
+.header-btn {
+  background: rgba(167,206,57,0.12);
+  border-color: rgba(167,206,57,0.35);
+  color: var(--white);
 }
-
-.lightbox-close{
-  position:absolute;
-  top:18px;
-  left:18px;
-
-  width:38px;
-  height:38px;
-
-  border:none;
-  border-radius:50%;
 
-  cursor:pointer;
+.header-btn:hover { background: rgba(167,206,57,0.25); }
 
-  background:rgba(255,255,255,0.15);
-  color:white;
+.logout-btn {
+  background: rgba(220,53,69,0.12);
+  border-color: rgba(220,53,69,0.35);
+  color: #ff6b7a;
 }
 
-.footer{
-  text-align:center;
-  color:var(--text-muted);
+.logout-btn:hover { background: rgba(220,53,69,0.25); color: #ff4757; }
 
-  font-size:0.72rem;
-
-  width:100%;
-  max-width:1100px;
-
-  padding:14px;
-
-  border-top:1px solid rgba(93,103,111,0.1);
-
-  margin:24px auto 0;
-}
-
-@keyframes spin{
-  to{
-    transform:rotate(360deg);
-  }
-}
 @media (max-width: 540px) {
   .header-actions a span, .header-actions button span { display: none; }
   .header-actions a, .header-actions button { padding: 8px 10px; gap: 0; }
@@ -768,1128 +159,792 @@ body{
   .header-actions a, .header-actions button { padding: 7px 8px; }
 }
 
-</style>
+/* ===== CONTENT ===== */
+.page-content {
+  width: 100%;
+  max-width: 1100px;
+  margin: auto;
+}
 
+.page-title {
+  text-align: center;
+  margin-bottom: 22px;
+}
+
+.page-title h1 {
+  font-size: 1.6rem;
+  color: var(--slate-dark);
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.page-title h1 i { color: var(--orange); }
+
+.page-title p {
+  margin-top: 8px;
+  font-size: 0.9rem;
+  color: var(--text-muted);
+}
+
+.stats-row {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 22px;
+}
+
+.stat-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 18px 20px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  border-top: 4px solid transparent;
+}
+
+.stat-card.green { border-top-color: var(--green); }
+.stat-card.orange { border-top-color: var(--orange); }
+.stat-card.slate { border-top-color: var(--slate); }
+
+.stat-icon {
+  width: 46px; height: 46px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+  flex-shrink: 0;
+}
+
+.stat-card.green .stat-icon { background: rgba(167,206,57,0.15); color: var(--green-dark); }
+.stat-card.orange .stat-icon { background: rgba(239,150,0,0.15); color: var(--orange); }
+.stat-card.slate .stat-icon { background: rgba(93,103,111,0.12); color: var(--slate); }
+
+.stat-label { font-size: 0.78rem; color: var(--text-muted); margin-bottom: 4px; }
+.stat-value { font-size: 1.7rem; font-weight: 500; color: var(--slate-dark); line-height: 1; }
+
+.toolbar {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+  padding: 14px 18px;
+  margin-bottom: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.search-box {
+  flex: 1;
+  min-width: 200px;
+  position: relative;
+}
+
+.search-box i {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-muted);
+  font-size: 0.85rem;
+}
+
+.search-box input {
+  width: 100%;
+  padding: 9px 36px 9px 14px;
+  border: 1.5px solid rgba(93,103,111,0.2);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  outline: none;
+  transition: 0.25s;
+}
+
+.search-box input:focus {
+  border-color: var(--green);
+  background: white;
+  box-shadow: 0 0 0 3px rgba(167,206,57,0.15);
+}
+
+.filter-select {
+  padding: 9px 14px;
+  border: 1.5px solid rgba(93,103,111,0.2);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-family: var(--font);
+  font-size: 0.85rem;
+  color: var(--text);
+  outline: none;
+  cursor: pointer;
+}
+
+.refresh-btn {
+  background: rgba(167,206,57,0.12);
+  border: 1.5px solid rgba(167,206,57,0.35);
+  color: var(--green-dark);
+  border-radius: var(--radius-sm);
+  padding: 9px 16px;
+  font-family: var(--font);
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.25s;
+  white-space: nowrap;
+}
+
+.refresh-btn:hover { background: rgba(167,206,57,0.25); }
+.refresh-btn.spinning i { animation: spin 0.8s linear infinite; }
+
+.sync-indicator {
+  display: none;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  color: var(--text-muted);
+}
+
+.sync-indicator.active { display: flex; }
+
+.sync-dot {
+  width: 6px; height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-dot 1.2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%,100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.4; transform: scale(1.3); }
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+}
+
+.big-spinner {
+  width: 52px; height: 52px;
+  border-radius: 50%;
+  border: 4px solid rgba(167,206,57,0.2);
+  border-top: 4px solid var(--green);
+  animation: spin 1s linear infinite;
+  margin: 0 auto 16px;
+}
+
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  color: var(--text-muted);
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.07);
+}
+
+.empty-state i {
+  font-size: 3rem;
+  color: rgba(93,103,111,0.3);
+  margin-bottom: 14px;
+  display: block;
+}
+
+.violations-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+.v-card {
+  background: var(--white);
+  border-radius: var(--radius-md);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  overflow: hidden;
+  transition: transform 0.25s, box-shadow 0.25s;
+  animation: fadeUp 0.4s ease both;
+}
+
+.v-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.v-card-top {
+  height: 4px;
+  background: linear-gradient(90deg, var(--green), var(--orange));
+}
+
+.v-img-wrap {
+  position: relative;
+  overflow: hidden;
+  background: #eef0ec;
+  cursor: pointer;
+}
+
+.v-img-wrap img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.4s;
+}
+
+.v-img-wrap:hover img { transform: scale(1.04); }
+
+.v-img-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(61,69,75,0);
+  transition: 0.3s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.v-img-wrap:hover .v-img-overlay { background: rgba(61,69,75,0.35); }
+
+.v-img-overlay i {
+  color: white;
+  font-size: 1.6rem;
+  opacity: 0;
+  transition: 0.3s;
+}
+
+.v-img-wrap:hover .v-img-overlay i { opacity: 1; }
+
+.v-no-img {
+  height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  color: var(--text-muted);
+  background: #f0f2ef;
+}
+
+.v-no-img i { font-size: 2rem; opacity: 0.4; }
+
+.v-id-badge {
+  position: absolute;
+  top: 10px; right: 10px;
+  background: rgba(61,69,75,0.82);
+  color: white;
+  font-size: 0.72rem;
+  padding: 3px 9px;
+  border-radius: 20px;
+}
+
+.v-body { padding: 16px 18px; }
+
+.v-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 10px;
+  flex-wrap: wrap;
+}
+
+.v-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 0.75rem;
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-weight: 500;
+}
+
+.v-badge.date { background: rgba(167,206,57,0.15); color: var(--green-dark); }
+.v-badge.reporter { background: rgba(93,103,111,0.12); color: var(--slate-dark); }
+
+.v-contractor {
+  font-size: 1rem;
+  font-weight: 500;
+  color: var(--slate-dark);
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.v-contractor i { color: var(--orange); font-size: 0.9rem; }
+
+.v-desc {
+  font-size: 0.85rem;
+  color: var(--text-muted);
+  line-height: 1.65;
+  border-right: 3px solid #eaf5c0;
+  padding-right: 10px;
+  margin-bottom: 14px;
+}
+
+.v-footer {
+  border-top: 1px solid rgba(93,103,111,0.1);
+  padding-top: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.v-timestamp {
+  font-size: 0.73rem;
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.v-open-btn {
+  background: none;
+  border: 1.5px solid rgba(167,206,57,0.4);
+  color: var(--green-dark);
+  border-radius: 8px;
+  padding: 5px 12px;
+  text-decoration: none;
+  font-size: 0.78rem;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.v-open-btn:hover { background: rgba(167,206,57,0.15); }
+
+.action-btn {
+  width: 34px; height: 34px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.25s;
+  font-size: 0.85rem;
+}
+
+.action-btn.copy { background: rgba(93,103,111,0.12); color: var(--slate-dark); }
+.action-btn.edit { background: rgba(239,150,0,0.15); color: var(--orange); }
+.action-btn.delete { background: rgba(220,53,69,0.12); color: #dc3545; }
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.88);
+  z-index: 9000;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.lightbox.open { display: flex; }
+
+.lightbox img {
+  max-width: 90vw;
+  max-height: 88vh;
+  border-radius: 12px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  object-fit: contain;
+}
+
+.lightbox-close {
+  position: absolute;
+  top: 18px; left: 18px;
+  background: rgba(255,255,255,0.15);
+  border: none;
+  color: white;
+  width: 38px; height: 38px;
+  border-radius: 50%;
+  font-size: 1.1rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: 0.2s;
+}
+
+.lightbox-close:hover { background: rgba(255,255,255,0.3); }
+
+.footer {
+  text-align: center;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  width: 100%;
+  max-width: 1100px;
+  padding: 14px;
+  border-top: 1px solid rgba(93,103,111,0.1);
+  margin: 24px auto 0;
+}
+
+@keyframes spin { to { transform: rotate(360deg); } }
+
+@media (max-width: 900px) { .stats-row { grid-template-columns: repeat(2, 1fr); } }
+@media (max-width: 640px) { .stats-row { grid-template-columns: 1fr; } .violations-grid { grid-template-columns: 1fr; } }
+
+</style>
 </head>
 
 <body>
 
 <header class="main-header">
-
-<div class="header-brand">
-
-<img src="USCELOGO.png"
-alt="logo"
-class="header-logo">
-
-<div class="header-titles">
-<div class="header-app-name">Incident Spot</div>
-<div class="header-company">
-الشركة المصرية المتحدة للسكر
-</div>
-</div>
-
-</div>
-
-<div class="header-actions">
-
-<a href="main.html"
-class="header-btn">
-
-<i class="fas fa-arrow-right"></i>
-<span>رجوع</span>
-
-</a>
-
-<button class="logout-btn"
-onclick="confirmLogout()">
-
-<i class="fas fa-right-from-bracket"></i>
-<span>خروج</span>
-
-</button>
-
-</div>
-
+  <div class="header-brand">
+    <img src="USCELOGO.png" alt="logo" class="header-logo">
+    <div class="header-titles">
+      <div class="header-app-name">Incident Spot</div>
+      <div class="header-company">الشركة المصرية المتحدة للسكر</div>
+    </div>
+  </div>
+  <div class="header-actions">
+    <a href="main.html" class="header-btn"><i class="fas fa-arrow-right"></i><span>رجوع</span></a>
+    <button class="logout-btn" onclick="confirmLogout()"><i class="fas fa-right-from-bracket"></i><span>خروج</span></button>
+  </div>
 </header>
 
 <div class="page-content">
 
-<div class="page-title">
+  <div class="page-title">
+    <h1><i class="fas fa-shield-halved"></i> لوحة الإدارة</h1>
+    <p>عرض ومتابعة جميع البلاغات والمخالفات المسجّلة</p>
+  </div>
 
-<h1>
-<i class="fas fa-shield-halved"></i>
-لوحة الإدارة
-</h1>
+  <div class="stats-row">
+    <div class="stat-card green">
+      <div class="stat-icon"><i class="fas fa-flag"></i></div>
+      <div><div class="stat-label">إجمالي البلاغات</div><div class="stat-value" id="statTotal">—</div></div>
+    </div>
+    <div class="stat-card orange">
+      <div class="stat-icon"><i class="fas fa-calendar-day"></i></div>
+      <div><div class="stat-label">بلاغات اليوم</div><div class="stat-value" id="statToday">—</div></div>
+    </div>
+    <div class="stat-card slate">
+      <div class="stat-icon"><i class="fas fa-hard-hat"></i></div>
+      <div><div class="stat-label">مقاولون مخالفون</div><div class="stat-value" id="statContractors">—</div></div>
+    </div>
+  </div>
 
-<p>
-عرض ومتابعة جميع البلاغات والمخالفات المسجّلة
-</p>
+  <div class="toolbar">
+    <div class="search-box">
+      <i class="fas fa-magnifying-glass"></i>
+      <input type="text" id="searchInput" placeholder="ابحث بالمقاول أو الوصف أو المُبلِّغ..." oninput="debouncedFilter()">
+    </div>
+    <select class="filter-select" id="reporterFilter" onchange="filterCards()">
+      <option value="">كل المُبلِّغين</option>
+    </select>
+    <button class="refresh-btn" onclick="exportExcel()"><i class="fas fa-file-excel"></i> Excel</button>
+    <div class="sync-indicator" id="syncIndicator"><div class="sync-dot"></div><span>يتحدث...</span></div>
+    <button class="refresh-btn" id="refreshBtn" onclick="forceRefresh()"><i class="fas fa-rotate-right"></i> تحديث</button>
+  </div>
 
-</div>
+  <div id="violationsContainer">
+    <div class="loading-state"><div class="big-spinner"></div><p>جاري تحميل البيانات...</p></div>
+  </div>
 
-<div class="stats-row">
-
-<div class="stat-card green">
-<div class="stat-icon">
-<i class="fas fa-flag"></i>
-</div>
-
-<div>
-<div class="stat-label">إجمالي البلاغات</div>
-<div class="stat-value" id="statTotal">—</div>
-</div>
-</div>
-
-<div class="stat-card orange">
-<div class="stat-icon">
-<i class="fas fa-calendar-day"></i>
-</div>
-
-<div>
-<div class="stat-label">بلاغات اليوم</div>
-<div class="stat-value" id="statToday">—</div>
-</div>
-</div>
-
-<div class="stat-card slate">
-<div class="stat-icon">
-<i class="fas fa-hard-hat"></i>
-</div>
-
-<div>
-<div class="stat-label">مقاولون مخالفون</div>
-<div class="stat-value" id="statContractors">—</div>
-</div>
-</div>
+  <footer class="footer">
+    <p>© 2026 Incident Spot — جميع الحقوق محفوظة</p>
+    <div>Mahmoud Abou Taleb | 201028262611</div>
+  </footer>
 
 </div>
 
-<div class="toolbar">
-
-<div class="search-box">
-
-<i class="fas fa-magnifying-glass"></i>
-
-<input type="text"
-id="searchInput"
-placeholder="ابحث بالمقاول أو الوصف أو المُبلِّغ..."
-oninput="debouncedFilter()">
-
-</div>
-
-<select class="filter-select"
-id="reporterFilter"
-onchange="filterCards()">
-
-<option value="">
-كل المُبلِّغين
-</option>
-
-</select>
-
-<button class="refresh-btn"
-onclick="exportExcel()">
-
-<i class="fas fa-file-excel"></i>
-Excel
-
-</button>
-
-<div class="sync-indicator"
-id="syncIndicator">
-
-<div class="sync-dot"></div>
-<span>يتحدث...</span>
-
-</div>
-
-<button class="refresh-btn"
-id="refreshBtn"
-onclick="forceRefresh()">
-
-<i class="fas fa-rotate-right"></i>
-تحديث
-
-</button>
-
-</div>
-
-<div id="violationsContainer">
-
-<div class="loading-state">
-
-<div class="big-spinner"></div>
-
-<p>جاري تحميل البيانات...</p>
-
-</div>
-
-</div>
-
-<footer class="footer">
-
-<p>
-© 2026 Incident Spot — جميع الحقوق محفوظة
-</p>
-
-<div>
-Mahmoud Abou Taleb | 201028262611
-</div>
-
-</footer>
-
-</div>
-
-<div class="lightbox"
-id="lightbox"
-onclick="closeLightbox(event)">
-
-<button class="lightbox-close"
-onclick="closeLightbox()">
-
-<i class="fas fa-xmark"></i>
-
-</button>
-
-<img id="lightboxImg"
-src=""
-alt="صورة البلاغ">
-
+<div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+  <button class="lightbox-close" onclick="closeLightbox()"><i class="fas fa-xmark"></i></button>
+  <img id="lightboxImg" src="" alt="صورة البلاغ">
 </div>
 
 <audio id="deleteSound" preload="auto">
-<source src="delete.mp3" type="audio/mpeg">
+  <source src="delete.mp3" type="audio/mpeg">
 </audio>
 
 <script>
 
-const SHEET_ID =
-"1eRWXzIFP0dqvjgAk9uG5fqd_3NEcdeYEIINldReda8Y";
-
+const SHEET_ID   = "1eRWXzIFP0dqvjgAk9uG5fqd_3NEcdeYEIINldReda8Y";
 const SHEET_NAME = "Violations";
-
-const SCRIPT_URL =
-"https://script.google.com/macros/s/AKfycbyL9-SS_w3SzwLBYPrrEIfaqGJtzYJ_K4JOkf1KgWIQVys7ivBd4WhIsVAcANcLvXw/exec";
-
-const CACHE_KEY =
-"admin_violations_cache";
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyL9-SS_w3SzwLBYPrrEIfaqGJtzYJ_K4JOkf1KgWIQVys7ivBd4WhIsVAcANcLvXw/exec";
+const CACHE_KEY  = "admin_violations_cache";
 
 const ADMIN_NAMES = [
-"Mohamed Akram Nour Eldien Refaey",
-"Mahmoud Abou Taleb Mahmoud"
+  "Mohamed Akram Nour Eldien Refaey",
+  "Mahmoud Abou Taleb Mahmoud"
 ];
 
 let currentUser = "";
+try { const ud = JSON.parse(localStorage.getItem('userData')||'{}'); currentUser = ud.name || ""; } catch(e) {}
 
-try{
-
-const ud =
-JSON.parse(
-localStorage.getItem('userData')||'{}'
-);
-
-currentUser = ud.name || "";
-
-}catch(e){}
-
-if(!ADMIN_NAMES.includes(currentUser)){
-
-document.body.innerHTML = `
-<div style="
-display:flex;
-flex-direction:column;
-align-items:center;
-justify-content:center;
-min-height:100vh;
-gap:16px;
-font-family:'Cairo',sans-serif;
-text-align:center;
-">
-
-<i class="fas fa-lock"
-style="font-size:3rem;color:#dc3545;"></i>
-
-<h2>غير مصرّح بالدخول</h2>
-
-<a href="index.html"
-style="
-background:#A7CE39;
-padding:10px 24px;
-border-radius:10px;
-text-decoration:none;
-color:#3d454b;
-">
-العودة
-</a>
-
-</div>
-`;
-
+if (!ADMIN_NAMES.includes(currentUser)) {
+  document.body.innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:100vh;gap:16px;font-family:'Cairo',sans-serif;text-align:center;">
+      <i class="fas fa-lock" style="font-size:3rem;color:#dc3545;"></i>
+      <h2>غير مصرّح بالدخول</h2>
+      <a href="index.html" style="background:#A7CE39;padding:10px 24px;border-radius:10px;text-decoration:none;color:#3d454b;">العودة</a>
+    </div>`;
 }
 
 let allViolations = [];
 
-function escHtml(s){
-
-return String(s)
-.replace(/&/g,'&amp;')
-.replace(/</g,'&lt;')
-.replace(/>/g,'&gt;')
-.replace(/"/g,'&quot;')
-.replace(/'/g,'&#39;');
-
+function escHtml(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-function showLoading(){
-
-document.getElementById(
-'violationsContainer'
-).innerHTML = `
-<div class="loading-state">
-
-<div class="big-spinner"></div>
-
-<p>جاري تحميل البيانات...</p>
-
-</div>
-`;
-
+function showLoading() {
+  document.getElementById('violationsContainer').innerHTML = `<div class="loading-state"><div class="big-spinner"></div><p>جاري تحميل البيانات...</p></div>`;
 }
 
-function saveToCache(data){
+function saveToCache(data) { localStorage.setItem(CACHE_KEY, JSON.stringify(data)); }
 
-localStorage.setItem(
-CACHE_KEY,
-JSON.stringify(data)
-);
-
+function loadFromCache() {
+  try { const raw = localStorage.getItem(CACHE_KEY); return raw ? JSON.parse(raw) : []; } catch(e) { return []; }
 }
 
-function loadFromCache(){
-
-try{
-
-const raw =
-localStorage.getItem(CACHE_KEY);
-
-return raw
-? JSON.parse(raw)
-: [];
-
-}catch(e){
-
-return [];
-
+async function fetchFromNetwork() {
+  try {
+    const res  = await fetch(SCRIPT_URL + "?action=read&t=" + Date.now());
+    const data = await res.json();
+    if (!data.success || !Array.isArray(data.rows)) return [];
+    return data.rows.map(r => ({
+      id: r.id||"", date: r.date||"", reporter: r.reporter||"",
+      contractor: r.contractor||"", description: r.description||"",
+      imageUrl: r.imageUrl||"", timestamp: r.timestamp||""
+    }));
+  } catch(e) { return []; }
 }
 
+async function init() {
+  const cached = loadFromCache();
+  if (cached.length) {
+    allViolations = cached;
+    updateStats(); populateReporterFilter(); renderCards(allViolations);
+    backgroundSync();
+  } else {
+    showLoading();
+    await forceRefresh();
+  }
 }
 
-async function fetchFromNetwork(){
-
-try{
-
-const res =
-await fetch(
-SCRIPT_URL + "?action=read&t=" + Date.now()
-);
-
-const data = await res.json();
-
-if(
-!data.success ||
-!Array.isArray(data.rows)
-) return [];
-
-return data.rows.map(r=>({
-
-id:r.id || "",
-date:r.date || "",
-reporter:r.reporter || "",
-contractor:r.contractor || "",
-description:r.description || "",
-imageUrl:r.imageUrl || "",
-timestamp:r.timestamp || ""
-
-}));
-
-}catch(e){
-
-return [];
-
+async function backgroundSync() {
+  document.getElementById('syncIndicator').classList.add('active');
+  const fresh = await fetchFromNetwork();
+  document.getElementById('syncIndicator').classList.remove('active');
+  if (!fresh.length) return;
+  allViolations = fresh.reverse();
+  saveToCache(allViolations);
+  updateStats(); populateReporterFilter(); filterCards();
 }
 
+async function forceRefresh() {
+  const btn = document.getElementById('refreshBtn');
+  btn.classList.add('spinning');
+  const fresh = await fetchFromNetwork();
+  btn.classList.remove('spinning');
+  allViolations = fresh.reverse();
+  saveToCache(allViolations);
+  updateStats(); populateReporterFilter(); renderCards(allViolations);
 }
 
-async function init(){
-
-const cached =
-loadFromCache();
-
-if(cached.length){
-
-allViolations = cached;
-
-updateStats();
-populateReporterFilter();
-renderCards(allViolations);
-
-backgroundSync();
-
-}else{
-
-showLoading();
-
-await forceRefresh();
-
+function updateStats() {
+  const today = new Date().toDateString();
+  document.getElementById('statTotal').textContent = allViolations.length;
+  document.getElementById('statToday').textContent = allViolations.filter(v => new Date(String(v.date)).toDateString() === today).length;
+  document.getElementById('statContractors').textContent = new Set(allViolations.map(v => v.contractor).filter(Boolean)).size;
 }
 
-}
-
-async function backgroundSync(){
-
-document.getElementById(
-'syncIndicator'
-).classList.add('active');
-
-const fresh =
-await fetchFromNetwork();
-
-document.getElementById(
-'syncIndicator'
-).classList.remove('active');
-
-if(!fresh.length) return;
-
-allViolations = fresh.reverse();
-
-saveToCache(allViolations);
-
-updateStats();
-populateReporterFilter();
-filterCards();
-
-}
-
-async function forceRefresh(){
-
-const btn =
-document.getElementById('refreshBtn');
-
-btn.classList.add('spinning');
-
-const fresh =
-await fetchFromNetwork();
-
-btn.classList.remove('spinning');
-
-allViolations = fresh.reverse();
-
-saveToCache(allViolations);
-
-updateStats();
-populateReporterFilter();
-renderCards(allViolations);
-
-}
-
-function updateStats(){
-
-const today =
-new Date().toLocaleDateString('en-CA');
-
-const todayCount =
-allViolations.filter(v=>{
-
-const raw = String(v.date);
-
-if(raw.includes(today))
-return true;
-
-const match =
-raw.match(/Date\((\d+),(\d+),(\d+)\)/);
-
-if(match){
-
-const d = new Date(
-+match[1],
-+match[2],
-+match[3]
-);
-
-return (
-d.toLocaleDateString('en-CA')
-=== today
-);
-
-}
-
-return false;
-
-}).length;
-
-document.getElementById(
-'statTotal'
-).textContent = allViolations.length;
-
-document.getElementById(
-'statToday'
-).textContent = todayCount;
-
-document.getElementById(
-'statContractors'
-).textContent =
-new Set(
-allViolations
-.map(v=>v.contractor)
-.filter(Boolean)
-).size;
-
-}
-
-function populateReporterFilter(){
-
-const sel =
-document.getElementById(
-'reporterFilter'
-);
-
-const reporters =
-[
-...new Set(
-allViolations
-.map(v=>v.reporter)
-.filter(Boolean)
-)
-].sort();
-
-sel.innerHTML =
-'<option value="">كل المُبلِّغين</option>';
-
-reporters.forEach(r=>{
-
-const o =
-document.createElement('option');
-
-o.value = r;
-o.textContent = r;
-
-sel.appendChild(o);
-
-});
-
+function populateReporterFilter() {
+  const sel = document.getElementById('reporterFilter');
+  const reporters = [...new Set(allViolations.map(v => v.reporter).filter(Boolean))].sort();
+  sel.innerHTML = '<option value="">كل المُبلِّغين</option>';
+  reporters.forEach(r => { const o = document.createElement('option'); o.value = r; o.textContent = r; sel.appendChild(o); });
 }
 
 let searchTimeout;
+function debouncedFilter() { clearTimeout(searchTimeout); searchTimeout = setTimeout(filterCards, 250); }
 
-function debouncedFilter(){
-
-clearTimeout(searchTimeout);
-
-searchTimeout =
-setTimeout(filterCards,250);
-
+function filterCards() {
+  const q        = document.getElementById('searchInput').value.toLowerCase();
+  const reporter = document.getElementById('reporterFilter').value;
+  renderCards(allViolations.filter(v => {
+    const match = (v.contractor||"").toLowerCase().includes(q) || (v.description||"").toLowerCase().includes(q) || (v.reporter||"").toLowerCase().includes(q);
+    return match && (!reporter || v.reporter === reporter);
+  }));
 }
 
-function filterCards(){
-
-const q =
-document.getElementById(
-'searchInput'
-).value.toLowerCase();
-
-const reporter =
-document.getElementById(
-'reporterFilter'
-).value;
-
-renderCards(
-
-allViolations.filter(v=>{
-
-const match =
-
-(v.contractor||"")
-.toLowerCase()
-.includes(q)
-
-||
-
-(v.description||"")
-.toLowerCase()
-.includes(q)
-
-||
-
-(v.reporter||"")
-.toLowerCase()
-.includes(q);
-
-return match &&
-(!reporter || v.reporter===reporter);
-
-})
-
-);
-
+function formatDate(raw) {
+  if (!raw) return "—";
+  const s = String(raw);
+  const m = s.match(/Date\((\d+),(\d+),(\d+)\)/);
+  if (m) return new Date(+m[1],+m[2],+m[3]).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+  const d = new Date(s);
+  if (!isNaN(d)) return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+  return s;
 }
 
-function formatDate(raw){
-
-if(!raw) return "—";
-
-const d = new Date(raw);
-
-if(!isNaN(d)){
-
-return d.toLocaleDateString(
-'ar-EG',
-{
-year:'numeric',
-month:'long',
-day:'numeric'
-}
-);
-
+function formatTimestamp(raw) {
+  if (!raw) return "—";
+  const s = String(raw);
+  const m = s.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);
+  if (m) return new Date(+m[1],+m[2],+m[3],+m[4],+m[5],+m[6]).toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  const d = new Date(s);
+  if (!isNaN(d)) return d.toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});
+  return s;
 }
 
-return raw;
-
+function renderCards(list) {
+  const container = document.getElementById('violationsContainer');
+  if (!list.length) {
+    container.innerHTML = `<div class="empty-state"><i class="fas fa-inbox"></i><p>لا توجد بلاغات مطابقة</p></div>`;
+    return;
+  }
+  const grid = document.createElement('div');
+  grid.className = 'violations-grid';
+  list.forEach((v, idx) => {
+    const card = document.createElement('div');
+    card.className = 'v-card';
+    card.style.animationDelay = (idx * 0.04) + 's';
+    const imgSrc = v.imageUrl ? String(v.imageUrl).trim() : "";
+    card.innerHTML = `
+      <div class="v-card-top"></div>
+      ${imgSrc ? `
+        <div class="v-img-wrap">
+          <img src="${escHtml(imgSrc)}" loading="lazy" alt="صورة البلاغ" onerror="this.parentElement.outerHTML='<div class=\\'v-no-img\\'><i class=\\'fas fa-image-slash\\'></i><span>تعذّر التحميل</span></div>'">
+          <div class="v-img-overlay"><i class="fas fa-magnifying-glass-plus"></i></div>
+          <div class="v-id-badge">#${escHtml(String(v.id))}</div>
+        </div>` : `
+        <div class="v-no-img"><i class="fas fa-image-slash"></i><span>لا توجد صورة</span></div>`}
+      <div class="v-body">
+        <div class="v-meta-row">
+          <span class="v-badge date"><i class="fas fa-calendar"></i> ${formatDate(v.date)}</span>
+          <span class="v-badge reporter"><i class="fas fa-user"></i> ${escHtml(v.reporter)}</span>
+        </div>
+        <div class="v-contractor"><i class="fas fa-hard-hat"></i>${escHtml(String(v.contractor))}</div>
+        <div class="v-desc">${escHtml(String(v.description))}</div>
+        <div class="v-footer">
+          <div style="display:flex;align-items:center;gap:8px;">
+            <button class="action-btn copy"><i class="fas fa-copy"></i></button>
+            <button class="action-btn edit"><i class="fas fa-pen"></i></button>
+            <button class="action-btn delete"><i class="fas fa-xmark"></i></button>
+          </div>
+          <span class="v-timestamp"><i class="fas fa-clock"></i> ${formatTimestamp(v.timestamp)}</span>
+          ${imgSrc ? `<a href="${escHtml(imgSrc)}" target="_blank" class="v-open-btn"><i class="fas fa-arrow-up-right-from-square"></i> فتح</a>` : ''}
+        </div>
+      </div>`;
+    card.querySelector('.copy').addEventListener('click', () => copyViolation(v));
+    card.querySelector('.delete').addEventListener('click', () => deleteViolation(v.id));
+    card.querySelector('.edit').addEventListener('click', () => openEditModal(v));
+    const imgWrap = card.querySelector('.v-img-wrap');
+    if (imgWrap) imgWrap.addEventListener('click', () => openLightbox(imgSrc));
+    grid.appendChild(card);
+  });
+  container.innerHTML = '';
+  container.appendChild(grid);
 }
 
-function formatTimestamp(raw){
-
-if(!raw) return "—";
-
-const d = new Date(raw);
-
-if(!isNaN(d)){
-
-return d.toLocaleString(
-'ar-EG',
-{
-day:'numeric',
-month:'short',
-hour:'2-digit',
-minute:'2-digit'
-}
-);
-
+async function copyViolation(v) {
+  const text = `🚨 بلاغ مخالفة\n\n📅 التاريخ: ${formatDate(v.date)}\n\n👤 المُبلّغ: ${v.reporter}\n\n🏗️ المقاول: ${v.contractor}\n\n📝 وصف المخالفة:\n${v.description}\n\n#IncidentSpot`;
+  try {
+    await navigator.clipboard.writeText(text);
+    Swal.fire({ toast:true, position:'top', icon:'success', title:'تم النسخ', showConfirmButton:false, timer:1800 });
+  } catch(e) {}
 }
 
-return raw;
-
+async function deleteViolation(id) {
+  const confirm = await Swal.fire({
+    icon:'warning', title:'حذف البلاغ', text:'هل أنت متأكد؟',
+    showCancelButton:true, confirmButtonText:'حذف', cancelButtonText:'إلغاء', confirmButtonColor:'#dc3545'
+  });
+  if (!confirm.isConfirmed) return;
+  try {
+    const sound = document.getElementById('deleteSound');
+    if (sound) sound.play().catch(()=>{});
+    await fetch(`${SCRIPT_URL}?action=delete&id=${encodeURIComponent(id)}`);
+    allViolations = allViolations.filter(v => String(v.id) !== String(id));
+    saveToCache(allViolations);
+    updateStats(); populateReporterFilter(); filterCards();
+    Swal.fire({ toast:true, position:'top', icon:'success', title:'تم حذف البلاغ', showConfirmButton:false, timer:1800 });
+  } catch(err) {
+    Swal.fire({ icon:'error', title:'خطأ', text:'فشل حذف البلاغ' });
+  }
 }
 
-function renderCards(list){
-
-const container =
-document.getElementById(
-'violationsContainer'
-);
-
-if(!list.length){
-
-container.innerHTML = `
-<div class="empty-state">
-
-<i class="fas fa-inbox"></i>
-
-<p>لا توجد بلاغات مطابقة</p>
-
-</div>
-`;
-
-return;
-
+function openEditModal(v) {
+  Swal.fire({
+    title: 'تعديل البلاغ',
+    html: `
+      <input id="editContractor" class="swal2-input" placeholder="المقاول" value="${escHtml(v.contractor)}">
+      <textarea id="editDescription" class="swal2-textarea" placeholder="الوصف">${escHtml(v.description)}</textarea>`,
+    showCancelButton: true,
+    confirmButtonText: 'حفظ',
+    cancelButtonText: 'إلغاء',
+    preConfirm: () => ({
+      contractor:  document.getElementById('editContractor').value,
+      description: document.getElementById('editDescription').value
+    })
+  }).then(async result => {
+    if (!result.isConfirmed) return;
+    const newContractor  = result.value.contractor;
+    const newDescription = result.value.description;
+    try {
+      await fetch(`${SCRIPT_URL}?action=update&id=${encodeURIComponent(v.id)}&contractor=${encodeURIComponent(newContractor)}&description=${encodeURIComponent(newDescription)}`);
+      v.contractor  = newContractor;
+      v.description = newDescription;
+      saveToCache(allViolations);
+      filterCards();
+      Swal.fire({ toast:true, position:'top', icon:'success', title:'تم تعديل البلاغ', showConfirmButton:false, timer:1800 });
+    } catch(err) {
+      Swal.fire({ icon:'error', title:'خطأ', text:'فشل تعديل البلاغ' });
+    }
+  });
 }
 
-const grid =
-document.createElement('div');
-
-grid.className = 'violations-grid';
-
-list.forEach((v,idx)=>{
-
-const card =
-document.createElement('div');
-
-card.className = 'v-card';
-
-const imgSrc =
-v.imageUrl
-? String(v.imageUrl).trim()
-: "";
-
-card.innerHTML = `
-
-<div class="v-card-top"></div>
-
-${imgSrc ? `
-
-<div class="v-img-wrap">
-
-<img
-src="${escHtml(imgSrc)}"
-loading="lazy"
-alt="صورة البلاغ">
-
-<div class="v-img-overlay">
-<i class="fas fa-magnifying-glass-plus"></i>
-</div>
-
-<div class="v-id-badge">
-#${escHtml(v.id)}
-</div>
-
-</div>
-
-`
-
-:
-
-`
-
-<div class="v-no-img">
-
-<i class="fas fa-image-slash"></i>
-
-<span>لا توجد صورة</span>
-
-</div>
-
-`
+function exportExcel() {
+  const data = allViolations.map(v => ({
+    ID: v.id, Date: v.date, Reporter: v.reporter,
+    Contractor: v.contractor, Description: v.description,
+    Image: v.imageUrl, Timestamp: v.timestamp
+  }));
+  const ws = XLSX.utils.json_to_sheet(data);
+  const wb = XLSX.utils.book_new();
+  XLSX.utils.book_append_sheet(wb, ws, "Violations");
+  XLSX.writeFile(wb, `Violations_${new Date().toISOString().split('T')[0]}.xlsx`);
 }
 
-<div class="v-body">
-
-<div class="v-meta-row">
-
-<span class="v-badge date">
-
-<i class="fas fa-calendar"></i>
-
-${formatDate(v.date)}
-
-</span>
-
-<span class="v-badge reporter">
-
-<i class="fas fa-user"></i>
-
-${escHtml(v.reporter)}
-
-</span>
-
-</div>
-
-<div class="v-contractor">
-
-<i class="fas fa-hard-hat"></i>
-
-${escHtml(v.contractor)}
-
-</div>
-
-<div class="v-desc">
-
-${escHtml(v.description)}
-
-</div>
-
-<div class="v-footer">
-
-<div style="
-display:flex;
-align-items:center;
-gap:8px;
-">
-
-<button class="action-btn copy">
-<i class="fas fa-copy"></i>
-</button>
-
-<button class="action-btn edit">
-<i class="fas fa-pen"></i>
-</button>
-
-<button class="action-btn delete">
-<i class="fas fa-xmark"></i>
-</button>
-
-</div>
-
-<span class="v-timestamp">
-
-<i class="fas fa-clock"></i>
-
-${formatTimestamp(v.timestamp)}
-
-</span>
-
-${imgSrc ? `
-
-<a href="${escHtml(imgSrc)}"
-target="_blank"
-class="v-open-btn">
-
-<i class="fas fa-arrow-up-right-from-square"></i>
-
-فتح
-
-</a>
-
-` : ''}
-
-</div>
-
-</div>
-`;
-
-card.querySelector('.copy')
-.addEventListener('click',()=>{
-copyViolation(v);
-});
-
-card.querySelector('.delete')
-.addEventListener('click',()=>{
-deleteViolation(v.id);
-});
-
-card.querySelector('.edit')
-.addEventListener('click',()=>{
-openEditModal(v);
-});
-
-const img =
-card.querySelector('.v-img-wrap');
-
-if(img){
-
-img.addEventListener('click',()=>{
-openLightbox(imgSrc);
-});
-
+function openLightbox(url) {
+  document.getElementById('lightboxImg').src = url;
+  document.getElementById('lightbox').classList.add('open');
 }
 
-grid.appendChild(card);
-
-});
-
-container.innerHTML = '';
-
-container.appendChild(grid);
-
+function closeLightbox(e) {
+  if (!e || e.target === document.getElementById('lightbox') || e.currentTarget?.classList.contains('lightbox-close')) {
+    document.getElementById('lightbox').classList.remove('open');
+    document.getElementById('lightboxImg').src = '';
+  }
 }
 
-async function copyViolation(v){
-
-const text =
-`🚨 بلاغ مخالفة
-
-📅 التاريخ: ${formatDate(v.date)}
-
-👤 المُبلّغ: ${v.reporter}
-
-🏗️ المقاول: ${v.contractor}
-
-📝 وصف المخالفة:
-${v.description}
-
-#IncidentSpot`;
-
-try{
-
-await navigator.clipboard.writeText(text);
-
-Swal.fire({
-toast:true,
-position:'top',
-icon:'success',
-title:'تم النسخ',
-showConfirmButton:false,
-timer:1800
-});
-
-}catch(e){}
-
-}
-
-async function deleteViolation(id){
-
-const confirm =
-await Swal.fire({
-
-icon:'warning',
-title:'حذف البلاغ',
-text:'هل أنت متأكد؟',
-
-showCancelButton:true,
-
-confirmButtonText:'حذف',
-cancelButtonText:'إلغاء',
-
-confirmButtonColor:'#dc3545'
-
-});
-
-if(!confirm.isConfirmed)
-return;
-
-try{
-
-const sound =
-document.getElementById('deleteSound');
-
-if(sound){
-sound.play().catch(()=>{});
-}
-
-// ✅ GET request — يشتغل مع doGet في Apps Script
-await fetch(
-`${SCRIPT_URL}?action=delete&id=${encodeURIComponent(id)}`
-);
-
-allViolations =
-allViolations.filter(
-v=>String(v.id)!==String(id)
-);
-
-saveToCache(allViolations);
-
-updateStats();
-populateReporterFilter();
-filterCards();
-
-Swal.fire({
-toast:true,
-position:'top',
-icon:'success',
-title:'تم حذف البلاغ',
-showConfirmButton:false,
-timer:1800
-});
-
-}catch(err){
-
-Swal.fire({
-icon:'error',
-title:'خطأ',
-text:'فشل حذف البلاغ'
-});
-
-}
-
-}
-
-function openEditModal(v){
-
-Swal.fire({
-
-title:'تعديل البلاغ',
-
-html:`
-
-<input
-id="editContractor"
-class="swal2-input"
-placeholder="المقاول"
-value="${escHtml(v.contractor)}">
-
-<textarea
-id="editDescription"
-class="swal2-textarea"
-placeholder="الوصف">${escHtml(v.description)}</textarea>
-`,
-
-showCancelButton:true,
-
-confirmButtonText:'حفظ',
-cancelButtonText:'إلغاء',
-
-preConfirm:()=>{
-
-return{
-
-contractor:
-document.getElementById(
-'editContractor'
-).value,
-
-description:
-document.getElementById(
-'editDescription'
-).value
-
-};
-
-}
-
-}).then(async result=>{
-
-if(!result.isConfirmed)
-return;
-
-const newContractor = result.value.contractor;
-const newDescription = result.value.description;
-
-try{
-
-// ✅ GET request — يشتغل مع doGet في Apps Script
-await fetch(
-`${SCRIPT_URL}?action=update` +
-`&id=${encodeURIComponent(v.id)}` +
-`&contractor=${encodeURIComponent(newContractor)}` +
-`&description=${encodeURIComponent(newDescription)}`
-);
-
-// تحديث الكاش المحلي
-v.contractor = newContractor;
-v.description = newDescription;
-
-saveToCache(allViolations);
-filterCards();
-
-Swal.fire({
-toast:true,
-position:'top',
-icon:'success',
-title:'تم تعديل البلاغ',
-showConfirmButton:false,
-timer:1800
-});
-
-}catch(err){
-
-Swal.fire({
-icon:'error',
-title:'خطأ',
-text:'فشل تعديل البلاغ'
-});
-
-}
-
-});
-
-}
-
-function exportExcel(){
-
-const data =
-allViolations.map(v=>({
-
-ID:v.id,
-Date:v.date,
-Reporter:v.reporter,
-Contractor:v.contractor,
-Description:v.description,
-Image:v.imageUrl,
-Timestamp:v.timestamp
-
-}));
-
-const ws =
-XLSX.utils.json_to_sheet(data);
-
-const wb =
-XLSX.utils.book_new();
-
-XLSX.utils.book_append_sheet(
-wb,
-ws,
-"Violations"
-);
-
-XLSX.writeFile(
-wb,
-`Violations_${
-new Date()
-.toISOString()
-.split('T')[0]
-}.xlsx`
-);
-
-}
-
-function openLightbox(url){
-
-document.getElementById(
-'lightboxImg'
-).src = url;
-
-document.getElementById(
-'lightbox'
-).classList.add('open');
-
-}
-
-function closeLightbox(e){
-
-if(
-!e ||
-e.target===
-document.getElementById('lightbox')
-){
-
-document.getElementById(
-'lightbox'
-).classList.remove('open');
-
-document.getElementById(
-'lightboxImg'
-).src = '';
-
-}
-
-}
-
-document.addEventListener(
-'keydown',
-e=>{
-
-if(e.key==='Escape')
-closeLightbox({});
-
-}
-);
-
-function confirmLogout(){
-
-Swal.fire({
-
-icon:'question',
-title:'تسجيل الخروج',
-text:'هل أنت متأكد؟',
-
-showCancelButton:true,
-
-confirmButtonText:'نعم، خروج',
-cancelButtonText:'إلغاء',
-
-confirmButtonColor:'#dc3545',
-cancelButtonColor:'#5D676F',
-
-reverseButtons:true
-
-}).then(r=>{
-
-if(r.isConfirmed){
-
-localStorage.removeItem('userData');
-
-sessionStorage.clear();
-
-window.location.href='index.html';
-
-}
-
-});
-
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeLightbox({}); });
+
+function confirmLogout() {
+  Swal.fire({
+    icon:'question', title:'تسجيل الخروج', text:'هل أنت متأكد؟',
+    showCancelButton:true, confirmButtonText:'نعم، خروج', cancelButtonText:'إلغاء',
+    confirmButtonColor:'#dc3545', cancelButtonColor:'#5D676F', reverseButtons:true
+  }).then(r => {
+    if (r.isConfirmed) { localStorage.removeItem('userData'); sessionStorage.clear(); window.location.href='index.html'; }
+  });
 }
 
 init();
 
 </script>
-
 </body>
 </html>
