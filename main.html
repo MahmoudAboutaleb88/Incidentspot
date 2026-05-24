@@ -22,8 +22,6 @@
       background-attachment: fixed; display: flex; flex-direction: column;
       padding-top: calc(var(--header-h) + 20px); padding-bottom: 30px; padding-right: 14px; padding-left: 14px;
     }
-
-    /* ===== HEADER ===== */
     .main-header {
       position: fixed; top: 0; right: 0; left: 0; z-index: 1000; height: var(--header-h);
       background: var(--slate-dark); border-bottom: 4px solid var(--green);
@@ -35,32 +33,15 @@
     .header-titles { display: flex; flex-direction: column; min-width: 0; }
     .header-app-name { font-weight: 500; font-size: 0.95rem; color: var(--white); white-space: nowrap; }
     .header-company { font-size: 0.68rem; color: var(--green); white-space: nowrap; }
-
     .header-actions { display: flex; align-items: center; gap: 8px; flex-shrink: 0; }
-
-    /* الأزرار — base مشتركة */
     .header-actions a,
     .header-actions button {
-      border-radius: var(--radius-sm);
-      padding: 7px 12px;
-      font-family: var(--font);
-      font-size: 0.82rem;
-      font-weight: 500;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      transition: all 0.25s;
-      text-decoration: none;
-      white-space: nowrap;
-      border: 1.5px solid transparent;
+      border-radius: var(--radius-sm); padding: 7px 12px; font-family: var(--font);
+      font-size: 0.82rem; font-weight: 500; cursor: pointer; display: flex; align-items: center;
+      gap: 6px; transition: all 0.25s; text-decoration: none; white-space: nowrap; border: 1.5px solid transparent;
     }
-
-    .myreports-btn {
-      background: rgba(93,103,111,0.12); border-color: rgba(93,103,111,0.3); color: var(--white);
-    }
+    .myreports-btn { background: rgba(93,103,111,0.12); border-color: rgba(93,103,111,0.3); color: var(--white); }
     .myreports-btn:hover { background: rgba(93,103,111,0.25); }
-
     .admin-btn {
       background: rgba(239,150,0,0.15); border-color: rgba(239,150,0,0.45); color: var(--orange);
       display: none; position: relative;
@@ -70,22 +51,12 @@
       width: 7px; height: 7px; background: var(--orange); border-radius: 50%;
       position: absolute; top: 5px; left: 5px; animation: pulse-dot 2s infinite;
     }
-    @keyframes pulse-dot {
-      0%, 100% { opacity: 1; transform: scale(1); }
-      50%       { opacity: 0.5; transform: scale(1.4); }
-    }
-
-    .logout-btn {
-      background: rgba(220,53,69,0.12); border-color: rgba(220,53,69,0.35); color: #ff6b7a;
-    }
+    @keyframes pulse-dot { 0%, 100% { opacity: 1; transform: scale(1); } 50% { opacity: 0.5; transform: scale(1.4); } }
+    .logout-btn { background: rgba(220,53,69,0.12); border-color: rgba(220,53,69,0.35); color: #ff6b7a; }
     .logout-btn:hover { background: rgba(220,53,69,0.25); color: #ff4757; }
-
-    /* ===== RESPONSIVE HEADER ===== */
     @media (max-width: 540px) {
-      .header-actions a span,
-      .header-actions button span { display: none; }
-      .header-actions a,
-      .header-actions button { padding: 8px 10px; gap: 0; }
+      .header-actions a span, .header-actions button span { display: none; }
+      .header-actions a, .header-actions button { padding: 8px 10px; gap: 0; }
       .header-actions { gap: 6px; }
       .header-company { display: none; }
     }
@@ -94,11 +65,8 @@
       .header-logo { width: 32px; height: 32px; }
       .header-app-name { font-size: 0.82rem; }
       .header-actions { gap: 4px; }
-      .header-actions a,
-      .header-actions button { padding: 7px 8px; }
+      .header-actions a, .header-actions button { padding: 7px 8px; }
     }
-
-    /* ===== CONTENT ===== */
     .page-content { width: 100%; max-width: 850px; margin: auto; }
     .page-title { text-align: center; margin-bottom: 18px; }
     .page-title h1 { font-size: 1.6rem; color: var(--slate-dark); display: inline-flex; align-items: center; gap: 10px; }
@@ -167,19 +135,16 @@
         <div class="header-company">الشركة المصرية المتحدة للسكر</div>
       </div>
     </div>
-
     <div class="header-actions">
       <a href="me.html" class="myreports-btn" title="بلاغاتي">
         <i class="fas fa-list-check"></i>
         <span>بلاغاتي</span>
       </a>
-
       <a href="admin.html" class="admin-btn" id="adminBtn" title="لوحة الإدارة">
         <span class="admin-badge"></span>
         <i class="fas fa-shield-halved"></i>
         <span>الإدارة</span>
       </a>
-
       <button class="logout-btn" onclick="confirmLogout()">
         <i class="fas fa-right-from-bracket"></i>
         <span>خروج</span>
@@ -245,11 +210,11 @@
 
   <div class="loading-overlay" id="loadingOverlay">
     <div class="spinner"></div>
-    <div class="loading-text" id="loadingText">جاري إرسال البيانات...</div>
+    <div class="loading-text">جاري إرسال البيانات...</div>
   </div>
 
   <script>
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxYOzPZE46uHqO59ZDNLI7D4N8XEFNdtfvc_lSP67NRTdNrAIIHDqMt_AOAgXNjGM9P/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbxa0bgZMMB_BvT4tYnmypqWRF9HgScMjH2H1FGgVBb48qybprHZKfWmGgCP56gSHuSz/exec";
     const IMGBB_KEY  = "d4d42e5ea72b7ead74254a4b7356963e";
 
     const ADMIN_NAMES = [
@@ -277,7 +242,6 @@
       });
     }
 
-    // جيب اسم المبلغ من localStorage
     let reporterName = "";
     try {
       const userData = JSON.parse(localStorage.getItem('userData') || '{}');
@@ -286,7 +250,6 @@
 
     document.getElementById('reporterName').value = reporterName;
 
-    // وريله زرار الأدمن لو في القائمة
     if (ADMIN_NAMES.includes(reporterName)) {
       document.getElementById('adminBtn').style.display = 'flex';
     }
@@ -296,7 +259,7 @@
 
     function resizeImage(file, maxSize, quality) {
       return new Promise((resolve) => {
-        const img = new Image();
+        const img    = new Image();
         const reader = new FileReader();
         reader.onload = (ev) => {
           img.onload = () => {
@@ -320,7 +283,7 @@
 
       const reader = new FileReader();
       reader.onload = (ev) => {
-        document.getElementById('preview').src = ev.target.result;
+        document.getElementById('preview').src           = ev.target.result;
         document.getElementById('preview').style.display = 'block';
       };
       reader.readAsDataURL(file);
@@ -342,9 +305,9 @@
         const data = await res.json();
 
         if (data.success) {
-          imageUrl               = data.data.url;
-          status.textContent     = "✅ تم رفع الصورة بنجاح";
-          status.className       = "upload-status ok";
+          imageUrl           = data.data.url;
+          status.textContent = "✅ تم رفع الصورة بنجاح";
+          status.className   = "upload-status ok";
         } else {
           throw new Error("فشل رفع الصورة على ImgBB");
         }
@@ -369,24 +332,38 @@
       loading.style.display = 'flex';
 
       try {
-        const form = new FormData();
-        form.append('date',        document.getElementById('date').value);
-        form.append('reporter',    reporterName);
-        form.append('contractor',  document.getElementById('contractor').value);
-        form.append('description', document.getElementById('description').value);
-        form.append('imageUrl',    imageUrl);
+        // ✅ id محذوف — السكريبت بيحسبه تلقائياً (1، 2، 3...)
+        const params = new URLSearchParams({
+          action:      "add",
+          date:        document.getElementById('date').value,
+          reporter:    reporterName,
+          contractor:  document.getElementById('contractor').value,
+          description: document.getElementById('description').value,
+          imageUrl:    imageUrl,
+          timestamp:   new Date().toISOString()
+        });
 
-        await fetch(SCRIPT_URL, { method: "POST", mode: "no-cors", body: form });
+        const res  = await fetch(`${SCRIPT_URL}?${params.toString()}`);
+        const data = await res.json();
 
         loading.style.display = 'none';
-        Swal.fire({ icon: 'success', title: 'تم الإبلاغ بنجاح ✅', text: 'شكراً لملاحظاتك', confirmButtonColor: '#A7CE39' });
 
-        document.getElementById('violationForm').reset();
-        document.getElementById('preview').style.display    = 'none';
-        document.getElementById('uploadStatus').textContent = '';
-        imageUrl = "";
-        document.getElementById('date').value = new Date().toISOString().split('T')[0];
-        document.getElementById('reporterName').value = reporterName;
+        if (data.success) {
+          Swal.fire({
+            icon: 'success',
+            title: `تم الإبلاغ بنجاح ✅`,
+            text: `رقم البلاغ: ${data.id}`,
+            confirmButtonColor: '#A7CE39'
+          });
+          document.getElementById('violationForm').reset();
+          document.getElementById('preview').style.display    = 'none';
+          document.getElementById('uploadStatus').textContent = '';
+          imageUrl = "";
+          document.getElementById('date').value         = new Date().toISOString().split('T')[0];
+          document.getElementById('reporterName').value = reporterName;
+        } else {
+          throw new Error(data.message || "فشل إرسال البلاغ");
+        }
 
       } catch (err) {
         loading.style.display = 'none';
