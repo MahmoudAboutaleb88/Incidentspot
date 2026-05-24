@@ -187,7 +187,7 @@
   <script>
     const SHEET_ID   = "1eRWXzIFP0dqvjgAk9uG5fqd_3NEcdeYEIINldReda8Y";
     const SHEET_NAME = "Violations";
-    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbw2POlyIrsqAdcOP25FDrPV1tvYlJb0q9IYmrMfLprMI6qai06jXXJQFONbhr9SGwJm/exec";
+    const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyL9-SS_w3SzwLBYPrrEIfaqGJtzYJ_K4JOkf1KgWIQVys7ivBd4WhIsVAcANcLvXw/exec";
     const GVIZ_URL   = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(SHEET_NAME)}`;
 
     let currentUser = "";
@@ -277,7 +277,15 @@
     }
 
     function escHtml(s){return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;').replace(/'/g,'&#39;');}
-    function formatDate(raw){if(!raw)return"—";const s=String(raw);const m=s.match(/Date\((\d+),(\d+),(\d+)\)/);if(m)return new Date(+m[1],+m[2],+m[3]).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});if(s.match(/^\d{4}-\d{2}-\d{2}/)){const d=new Date(s);if(!isNaN(d))return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});}return s;}
+    function formatDate(raw){
+  if(!raw) return "—";
+  const s = String(raw);
+  const m = s.match(/Date\((\d+),(\d+),(\d+)\)/);
+  if(m) return new Date(+m[1],+m[2],+m[3]).toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+  const d = new Date(s);
+  if(!isNaN(d)) return d.toLocaleDateString('ar-EG',{year:'numeric',month:'long',day:'numeric'});
+  return s;
+}
     function formatTimestamp(raw){if(!raw)return"—";const s=String(raw);const m=s.match(/Date\((\d+),(\d+),(\d+),(\d+),(\d+),(\d+)\)/);if(m)return new Date(+m[1],+m[2],+m[3],+m[4],+m[5],+m[6]).toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});const d=new Date(s);if(!isNaN(d))return d.toLocaleString('ar-EG',{day:'numeric',month:'short',hour:'2-digit',minute:'2-digit'});return s;}
 
     function openLightbox(url){document.getElementById('lightboxImg').src=url;document.getElementById('lightbox').classList.add('open');}
