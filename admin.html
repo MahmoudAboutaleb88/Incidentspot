@@ -753,6 +753,20 @@ body{
     transform:rotate(360deg);
   }
 }
+@media (max-width: 540px) {
+  .header-actions a span, .header-actions button span { display: none; }
+  .header-actions a, .header-actions button { padding: 8px 10px; gap: 0; }
+  .header-actions { gap: 6px; }
+  .header-company { display: none; }
+}
+
+@media (max-width: 360px) {
+  .main-header { padding: 0 10px; }
+  .header-logo { width: 32px; height: 32px; }
+  .header-app-name { font-size: 0.82rem; }
+  .header-actions { gap: 4px; }
+  .header-actions a, .header-actions button { padding: 7px 8px; }
+}
 
 </style>
 
